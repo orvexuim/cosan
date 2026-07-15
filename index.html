@@ -1,0 +1,795 @@
+<!doctype html><html dir="auto"><head><meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' 'unsafe-eval' https: data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<script id="__base44_dark_class__">document.documentElement.classList.remove('dark');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text:wght@400;500;600;700&display=swap">
+<style id="__base44_editor_theme__">
+:root {
+  --background: 38 27% 94%;
+  --foreground: 0 0% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 4%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 4%;
+  --primary: 21 42% 55%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 39 17% 93%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 98%;
+  --input: 0 0% 98%;
+  --ring: 21 42% 55%;
+  --radius: 0.5rem;
+  color-scheme: light;
+}
+.dark {
+  --background: 220 5% 11%;
+  --foreground: 0 0% 99%;
+  --card: 0 1% 14%;
+  --card-foreground: 0 0% 99%;
+  --popover: 0 1% 14%;
+  --popover-foreground: 0 0% 99%;
+  --primary: 21 42% 55%;
+  --primary-foreground: 0 0% 99%;
+  --secondary: 0 0% 18%;
+  --secondary-foreground: 0 0% 99%;
+  --muted: 0 0% 18%;
+  --muted-foreground: 0 0% 65%;
+  --accent: 0 0% 18%;
+  --accent-foreground: 0 0% 99%;
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 0 0% 99%;
+  --border: 0 0% 16%;
+  --input: 0 0% 16%;
+  --ring: 21 42% 55%;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+/* shadcn's base layer: default every element's border-color to the theme
+   token. Without this, Tailwind's bare `border` utility only sets width and
+   the color falls back to currentColor (near-black text) — so the model's
+   `border` cards render heavy/dark and the `--border` value is ignored.
+   Explicit `border-{color}` utilities and inline styles still override. */
+*, *::before, *::after { border-color: hsl(var(--border)); }
+html, body {
+  margin: 0 !important;
+  padding: 0;
+  overflow: auto !important;
+  /* Inline card: transparent, so the real chat surface (a gradient, not the
+     single flat `--background` stop) shows straight through and the artifact
+     reads as inline chat content in both themes. Standalone saved file: opaque
+     `--background` so it stays readable on its own page. `--card` stays
+     elevated for emphasis blocks (stat tiles, panels) so hierarchy reads. */
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground));
+  font-family: 'WixMadeforText', 'Wix Madefor Text', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+/* 8px (vs 16px) — minimal breathing room from the iframe edge so
+   tightly-composed dashboards don't ship a fat empty halo at the top
+   before their first element. LLMs add their own inner spacing. */
+body { padding: 8px; }
+code, kbd, pre, samp { font-family: 'WixMadeforMonospace', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+a { color: hsl(var(--primary)); }
+hr { border: 0; border-top: 1px solid hsl(var(--border)); }
+h1, h2, h3, h4, h5, h6 { font-weight: 600; color: hsl(var(--foreground)); }
+</style>
+<script id="__base44_tw_config__">
+window.tailwind = window.tailwind || {};
+window.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+        secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+        destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+        muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+        accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+        popover: { DEFAULT: 'hsl(var(--popover))', foreground: 'hsl(var(--popover-foreground))' },
+        card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+      },
+      // A bare `border` / `divide-*` (no color) falls back to Tailwind
+      // preflight's DEFAULT, which is a FIXED gray-200 (#e5e7eb) — subtle on the
+      // light card but near-white glare on the dark card. The `colors.border`
+      // map above only creates the `border-border` class; it does NOT set the
+      // uncolored default. Point the DEFAULT at the theme token so an uncolored
+      // border adapts to dark mode like the rest of the palette. (Explicit
+      // `border-primary` etc. still override.)
+      borderColor: { DEFAULT: 'hsl(var(--border))' },
+      divideColor: { DEFAULT: 'hsl(var(--border))' },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        // Same two-name stack as `FONT_SANS_STACK` above. The
+        // sandboxed null-origin iframe lands on `Wix Madefor Text`
+        // (Google Fonts' name); `WixMadeforText` is here only for
+        // defense-in-depth in case the iframe ever runs same-origin.
+        sans: ['WixMadeforText', 'Wix Madefor Text', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        mono: ['WixMadeforMonospace', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
+    },
+  },
+};
+</script>
+<script src="https://cdn.tailwindcss.com" id="__base44_tw_cdn__"></script></head><body><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>COSMAN — Luxury Footwear</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --black:#0A0A0A; --black-soft:#111111; --black-card:#161616; --black-border:#252525;
+  --gold:#C9A84C; --gold-light:#E2C97E; --gold-dark:#A07830;
+  --gold-glow:rgba(201,168,76,0.12); --gold-glow2:rgba(201,168,76,0.25);
+  --cream:#F5F0E8; --cream2:#EDE8DF; --muted:#888; --subtle:#444;
+  --r-sm:4px; --r-md:8px; --r-lg:16px; --r-full:9999px;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--cream);overflow-x:hidden;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--black);}
+::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:2px;}
+
+/* ── CURSOR ── */
+#cur{width:8px;height:8px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;}
+#cur-ring{width:32px;height:32px;border:1px solid rgba(201,168,76,.45);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s,top .1s;}
+
+/* ── NAV ── */
+nav{position:fixed;inset:0 0 auto;z-index:1000;height:80px;padding:0 64px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,.8);backdrop-filter:blur(24px);border-bottom:1px solid rgba(201,168,76,.1);transition:all .4s var(--ease);}
+nav.scrolled{height:64px;background:rgba(10,10,10,.97);}
+.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+.cm-badge{width:42px;height:42px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--gold);background:var(--gold-glow);letter-spacing:1px;transition:all .3s;}
+.nav-logo:hover .cm-badge{background:var(--gold);color:var(--black);}
+.nav-brand{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--cream);letter-spacing:5px;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{text-decoration:none;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);transition:color .3s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a:hover::after{width:100%;}
+.nav-acts{display:flex;align-items:center;gap:20px;}
+.nav-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:8px;transition:color .3s;position:relative;}
+.nav-btn:hover{color:var(--gold);}
+.cart-dot{position:absolute;top:5px;right:5px;width:14px;height:14px;background:var(--gold);border-radius:50%;font-size:8px;font-weight:700;color:var(--black);display:flex;align-items:center;justify-content:center;}
+
+/* ── HERO ── */
+.hero{height:100vh;min-height:680px;position:relative;display:flex;align-items:center;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 75% 65% at 68% 50%,rgba(201,168,76,.07) 0%,transparent 65%),linear-gradient(150deg,#0A0A0A 0%,#0f0f0f 60%,#0A0A0A 100%);}
+.hero-grid{position:absolute;inset:0;opacity:.035;background-image:linear-gradient(var(--gold) 1px,transparent 1px),linear-gradient(90deg,var(--gold) 1px,transparent 1px);background-size:70px 70px;}
+.hero-content{position:relative;z-index:2;padding:0 64px;max-width:680px;}
+.eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.eyebrow-line{width:36px;height:1px;background:var(--gold);}
+.eyebrow-text{font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--gold);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(52px,7.5vw,96px);font-weight:900;line-height:.95;color:var(--cream);margin-bottom:20px;}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.5vw,26px);font-style:italic;font-weight:300;color:var(--muted);margin-bottom:28px;}
+.hero-desc{font-size:13px;font-weight:300;line-height:1.9;color:var(--muted);max-width:460px;margin-bottom:48px;}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;}
+.btn-gold{display:inline-flex;align-items:center;gap:10px;padding:15px 34px;background:var(--gold);color:var(--black);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;border-radius:var(--r-sm);position:relative;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s;}
+.btn-gold::before{content:'';position:absolute;inset:0;background:var(--gold-light);transform:translateX(-100%);transition:transform .4s var(--ease);}
+.btn-gold:hover::before{transform:translateX(0);}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(201,168,76,.38);}
+.btn-gold span,.btn-gold svg{position:relative;z-index:1;}
+.btn-outline{display:inline-flex;align-items:center;gap:10px;padding:14px 30px;background:transparent;color:var(--cream);font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;text-decoration:none;border:1px solid var(--black-border);cursor:pointer;border-radius:var(--r-sm);transition:all .3s;}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-glow);}
+.hero-visual{position:absolute;right:0;top:0;bottom:0;width:46%;overflow:hidden;}
+.hero-vis-inner{width:100%;height:100%;background:linear-gradient(to right,var(--black) 0%,transparent 25%),linear-gradient(135deg,#130f04 0%,#0c0a03 50%,#130f04 100%);display:flex;align-items:center;justify-content:center;}
+.orb{position:absolute;width:380px;height:380px;}
+.orb-r1{border-radius:50%;border:1px solid rgba(201,168,76,.14);animation:spin 22s linear infinite;}
+.orb-r2{border-radius:50%;border:1px dashed rgba(201,168,76,.08);animation:spin 16s linear infinite reverse;inset:36px;}
+.orb-r3{border-radius:50%;border:1px solid rgba(201,168,76,.06);animation:spin 28s linear infinite;inset:72px;}
+.orb-center{width:160px;height:160px;border:2px solid var(--gold);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:rgba(201,168,76,.05);box-shadow:0 0 60px rgba(201,168,76,.15),inset 0 0 30px rgba(201,168,76,.04);z-index:1;position:relative;}
+.orb-cm{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:var(--gold);}
+.orb-sub{font-size:9px;letter-spacing:3px;color:rgba(201,168,76,.55);text-transform:uppercase;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.hero-stats{position:absolute;bottom:56px;left:64px;display:flex;gap:44px;z-index:2;}
+.stat-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--gold);line-height:1;}
+.stat-lbl{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+.scroll-ind{position:absolute;right:56px;bottom:56px;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2;}
+.scroll-txt{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;}
+.scroll-ln{width:1px;height:52px;background:linear-gradient(to bottom,var(--gold),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.35;transform:scaleY(.5)}}
+
+/* ── MARQUEE ── */
+.marquee{padding:16px 0;border-top:1px solid var(--black-border);border-bottom:1px solid var(--black-border);background:var(--black-soft);overflow:hidden;}
+.marquee-track{display:flex;width:max-content;gap:56px;animation:marquee 28s linear infinite;}
+.m-item{display:flex;align-items:center;gap:18px;white-space:nowrap;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--subtle);}
+.m-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;flex-shrink:0;}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTIONS ── */
+section.pad{padding:100px 64px;}
+.sec-head{text-align:center;margin-bottom:56px;}
+.sec-eye{display:inline-flex;align-items:center;gap:12px;margin-bottom:14px;}
+.sec-eye-ln{width:28px;height:1px;background:var(--gold);}
+.sec-eye-txt{font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--gold);}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(30px,4vw,50px);font-weight:700;color:var(--cream);line-height:1.1;}
+.sec-title em{font-style:italic;color:var(--gold);}
+.sec-desc{margin-top:14px;font-size:13px;font-weight:300;color:var(--muted);line-height:1.9;max-width:480px;margin-left:auto;margin-right:auto;}
+
+/* ── HERO PRODUCTS GRID ── */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.prod-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;position:relative;transition:transform .4s var(--ease),border-color .4s,box-shadow .4s;}
+.prod-card:hover{transform:translateY(-8px);border-color:rgba(201,168,76,.28);box-shadow:0 28px 70px rgba(0,0,0,.55),0 0 0 1px rgba(201,168,76,.08);}
+.prod-img{height:230px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.pi-1{background:linear-gradient(135deg,#1a1208,#2a1e0a);}
+.pi-2{background:linear-gradient(135deg,#08101a,#0d1828);}
+.pi-3{background:linear-gradient(135deg,#0a1008,#111d11);}
+.pi-4{background:linear-gradient(135deg,#150a0a,#211010);}
+.pi-5{background:linear-gradient(135deg,#0f0f18,#181825);}
+.pi-6{background:linear-gradient(135deg,#14100a,#221a0c);}
+.pi-7{background:linear-gradient(135deg,#100a14,#1a1020);}
+.pi-8{background:linear-gradient(135deg,#0a1414,#0d1e1e);}
+.p-icon{font-size:68px;opacity:.16;transition:all .5s var(--ease);}
+.prod-card:hover .p-icon{opacity:.28;transform:scale(1.12) rotate(-4deg);}
+.prod-badge{position:absolute;top:14px;left:14px;padding:3px 10px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border-radius:var(--r-full);}
+.b-new{background:var(--gold);color:var(--black);}
+.b-hot{background:#8B1A1A;color:#f0a0a0;border:1px solid #C43A3A;}
+.b-sale{background:transparent;color:var(--gold);border:1px solid var(--gold);}
+.b-ltd{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3);}
+.prod-wish{position:absolute;top:12px;right:12px;width:32px;height:32px;background:rgba(10,10,10,.8);border:1px solid var(--black-border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:all .3s;opacity:0;}
+.prod-card:hover .prod-wish{opacity:1;}
+.prod-wish:hover{border-color:var(--gold);color:var(--gold);}
+.prod-info{padding:18px 18px 20px;}
+.prod-cat{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.prod-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--cream);line-height:1.3;margin-bottom:3px;}
+.prod-mat{font-size:11px;color:var(--muted);margin-bottom:12px;}
+.prod-sizes{display:flex;gap:5px;margin-bottom:14px;}
+.sz{padding:2px 7px;font-size:9px;font-weight:600;border:1px solid var(--black-border);border-radius:3px;color:var(--muted);cursor:pointer;transition:all .25s;}
+.sz:hover{border-color:var(--gold);color:var(--gold);}
+.prod-foot{display:flex;align-items:center;justify-content:space-between;}
+.prod-price{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--gold);}
+.prod-old{font-size:11px;color:var(--subtle);text-decoration:line-through;margin-left:5px;}
+.prod-add{width:36px;height:36px;background:var(--gold-glow);border:1px solid rgba(201,168,76,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gold);cursor:pointer;transition:all .3s;}
+.prod-add:hover{background:var(--gold);color:var(--black);transform:rotate(90deg);}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;justify-content:center;margin-bottom:48px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--r-full);padding:5px;width:fit-content;margin-left:auto;margin-right:auto;}
+.tab{padding:9px 26px;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-radius:var(--r-full);cursor:pointer;transition:all .3s;border:none;background:none;}
+.tab.on{background:var(--gold);color:var(--black);}
+.tab:not(.on):hover{color:var(--gold);}
+
+/* ── BESTSELLERS STRIP ── */
+.bs-strip{padding:80px 64px;background:var(--black-soft);}
+.bs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.bs-card{display:flex;align-items:center;gap:18px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--r-lg);padding:20px;cursor:pointer;transition:all .35s var(--ease);}
+.bs-card:hover{border-color:rgba(201,168,76,.3);transform:translateX(5px);}
+.bs-img{width:72px;height:72px;border-radius:var(--r-md);background:var(--gold-glow);border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;}
+.bs-rank{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:rgba(201,168,76,.35);letter-spacing:1px;margin-bottom:3px;}
+.bs-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--cream);margin-bottom:3px;}
+.bs-sub{font-size:11px;color:var(--muted);}
+.bs-right{margin-left:auto;text-align:right;}
+.bs-price{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--gold);}
+.bs-sold{font-size:10px;color:var(--muted);margin-top:3px;}
+.bs-bar{height:2px;background:var(--black-border);border-radius:1px;margin-top:8px;overflow:hidden;}
+.bs-fill{height:100%;background:linear-gradient(to right,var(--gold-dark),var(--gold));border-radius:1px;}
+
+/* ── NEW ARRIVALS ── */
+.new-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+
+/* ── BRAND STORY ── */
+.story-wrap{padding:110px 64px;display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center;background:var(--black);}
+.story-frame{position:relative;}
+.story-img{width:100%;padding-bottom:115%;position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--black-card);border:1px solid var(--black-border);}
+.story-inner{position:absolute;inset:0;background:linear-gradient(135deg,#1a1408,#2a1e0a);display:flex;align-items:center;justify-content:center;font-size:110px;opacity:.1;}
+.story-accent{position:absolute;bottom:-18px;left:-18px;width:100px;height:100px;border:2px solid var(--gold);border-radius:var(--r-md);z-index:-1;}
+.story-badge2{position:absolute;top:22px;right:-18px;background:var(--gold);color:var(--black);padding:14px 18px;border-radius:var(--r-md);text-align:center;}
+.sb-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1;}
+.sb-txt{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+.story-quote{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;font-weight:300;color:var(--gold);line-height:1.55;border-left:2px solid var(--gold);padding-left:22px;margin-bottom:26px;}
+.story-p{font-size:13px;font-weight:300;color:var(--muted);line-height:2;margin-bottom:14px;}
+.vals{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px;}
+.val{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--r-md);transition:border-color .3s;}
+.val:hover{border-color:rgba(201,168,76,.28);}
+.val-ico{width:30px;height:30px;flex-shrink:0;background:var(--gold-glow);border:1px solid rgba(201,168,76,.2);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.val-t{font-size:12px;font-weight:600;color:var(--cream);margin-bottom:2px;}
+.val-d{font-size:11px;color:var(--muted);line-height:1.5;}
+
+/* ── TESTIMONIALS ── */
+.testi{padding:100px 64px;background:var(--black-soft);}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:56px;}
+.t-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--r-lg);padding:34px 26px;cursor:default;transition:all .4s var(--ease);position:relative;overflow:hidden;}
+.t-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-glow) 0%,transparent 60%);opacity:0;transition:opacity .4s;}
+.t-card:hover::before{opacity:1;}
+.t-card:hover{border-color:rgba(201,168,76,.28);transform:translateY(-5px);}
+.t-qmark{font-family:'Playfair Display',serif;font-size:64px;line-height:.5;color:var(--gold);opacity:.25;margin-bottom:18px;}
+.t-stars{display:flex;gap:3px;margin-bottom:14px;}
+.star{color:var(--gold);font-size:11px;}
+.t-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;font-weight:300;color:var(--cream);line-height:1.75;margin-bottom:22px;position:relative;z-index:1;}
+.t-author{display:flex;align-items:center;gap:11px;position:relative;z-index:1;}
+.t-av{width:40px;height:40px;border-radius:50%;background:var(--gold-glow);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--gold);}
+.t-name{font-size:13px;font-weight:600;color:var(--cream);}
+.t-loc{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* ── NEWSLETTER ── */
+.nl{padding:100px 64px;background:var(--black);}
+.nl-inner{max-width:620px;margin:0 auto;text-align:center;}
+.nl-diamond{display:flex;align-items:center;gap:14px;justify-content:center;margin-bottom:28px;}
+.nl-dln{width:55px;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
+.nl-dln.r{background:linear-gradient(to left,transparent,var(--gold));}
+.nl-dmnd{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);}
+.nl-title{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;color:var(--cream);margin-bottom:12px;}
+.nl-title em{font-style:italic;color:var(--gold);}
+.nl-desc{font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:32px;}
+.nl-form{display:flex;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--r-sm);overflow:hidden;transition:border-color .3s,box-shadow .3s;}
+.nl-form:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
+.nl-inp{flex:1;background:none;border:none;outline:none;padding:15px 18px;font-size:13px;color:var(--cream);font-family:'Inter',sans-serif;}
+.nl-inp::placeholder{color:var(--subtle);}
+.nl-sub{padding:15px 26px;background:var(--gold);border:none;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--black);font-family:'Inter',sans-serif;transition:background .3s;}
+.nl-sub:hover{background:var(--gold-light);}
+.nl-trust{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:18px;}
+.nl-ti{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.nl-tick{color:var(--gold);}
+
+/* ── FOOTER ── */
+footer{background:var(--black-soft);border-top:1px solid var(--black-border);padding:76px 64px 36px;}
+.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:56px;}
+.ft-logo{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.ft-lbadge{width:38px;height:38px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:var(--gold);}
+.ft-lname{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--cream);letter-spacing:4px;}
+.ft-desc{font-size:12px;color:var(--muted);line-height:1.85;margin-bottom:22px;max-width:260px;}
+.ft-soc{display:flex;gap:8px;}
+.soc-btn{width:34px;height:34px;border:1px solid var(--black-border);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);cursor:pointer;transition:all .3s;text-decoration:none;}
+.soc-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-glow);}
+.ft-col-t{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--cream);margin-bottom:18px;}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.ft-links a{font-size:12px;color:var(--muted);text-decoration:none;transition:all .3s;}
+.ft-links a:hover{color:var(--gold);padding-left:5px;}
+.ft-bottom{border-top:1px solid var(--black-border);padding-top:28px;display:flex;align-items:center;justify-content:space-between;}
+.ft-copy{font-size:11px;color:var(--subtle);}
+.ft-copy span{color:var(--gold);}
+.ft-legal{display:flex;gap:22px;}
+.ft-legal a{font-size:11px;color:var(--subtle);text-decoration:none;transition:color .3s;}
+.ft-legal a:hover{color:var(--gold);}
+
+/* ── ANIMATIONS ── */
+.fade{opacity:0;transform:translateY(28px);transition:opacity .75s var(--ease),transform .75s var(--ease);}
+.fade.d1{transition-delay:.1s;}.fade.d2{transition-delay:.2s;}.fade.d3{transition-delay:.3s;}.fade.d4{transition-delay:.4s;}
+.fade.in{opacity:1;transform:translateY(0);}
+
+/* ── GOLD GLOW PULSE (hero badge) ── */
+@keyframes goldGlow{0%,100%{box-shadow:0 0 40px rgba(201,168,76,.12)}50%{box-shadow:0 0 80px rgba(201,168,76,.28)}}
+.orb-center{animation:goldGlow 3.5s ease-in-out infinite;}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <div class="cm-badge">CM</div>
+    <span class="nav-brand">COSMAN</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Collections</a></li>
+    <li><a href="#">Women</a></li>
+    <li><a href="#">Men</a></li>
+    <li><a href="#">Bags</a></li>
+    <li><a href="#">New In</a></li>
+    <li><a href="#">Sale</a></li>
+  </ul>
+  <div class="nav-acts">
+    <button class="nav-btn" title="Search">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <button class="nav-btn" title="Account">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
+    <button class="nav-btn" style="position:relative" title="Cart">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="cart-dot">3</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Summer Collection 2026</span>
+    </div>
+    <h1>Step Into<br/><em>Luxury</em></h1>
+    <p class="hero-sub">Where craftsmanship meets elegance</p>
+    <p class="hero-desc">COSMAN curates the finest footwear and accessories for those who demand nothing less than perfection. Every step, a statement.</p>
+    <div class="hero-cta">
+      <a href="#featured" class="btn-gold"><span>Shop Collection</span><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="m5 12 14 0M12 5l7 7-7 7"/></svg></a>
+      <a href="#story" class="btn-outline"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>Our Story</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-vis-inner">
+      <div style="position:relative;width:380px;height:380px;display:flex;align-items:center;justify-content:center;">
+        <div class="orb orb-r1" style="position:absolute;inset:0;"></div>
+        <div class="orb orb-r2" style="position:absolute;"></div>
+        <div class="orb orb-r3" style="position:absolute;"></div>
+        <div class="orb-center"><span class="orb-cm">CM</span><span class="orb-sub">Est. 2010</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-num">500+</div><div class="stat-lbl">Premium Styles</div></div>
+    <div><div class="stat-num">15K+</div><div class="stat-lbl">Happy Clients</div></div>
+    <div><div class="stat-num">100%</div><div class="stat-lbl">Authentic</div></div>
+  </div>
+  <div class="scroll-ind"><span class="scroll-txt">Scroll</span><div class="scroll-ln"></div></div>
+</section>
+
+<!-- ══════════ MARQUEE ══════════ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <div class="m-item"><span class="m-dot"></span>Premium Leather</div>
+    <div class="m-item"><span class="m-dot"></span>Free Shipping Over 500 MAD</div>
+    <div class="m-item"><span class="m-dot"></span>New Collection 2026</div>
+    <div class="m-item"><span class="m-dot"></span>Luxury Footwear</div>
+    <div class="m-item"><span class="m-dot"></span>Handcrafted Excellence</div>
+    <div class="m-item"><span class="m-dot"></span>100% Authentic</div>
+    <div class="m-item"><span class="m-dot"></span>White Glove Service</div>
+    <div class="m-item"><span class="m-dot"></span>Premium Leather</div>
+    <div class="m-item"><span class="m-dot"></span>Free Shipping Over 500 MAD</div>
+    <div class="m-item"><span class="m-dot"></span>New Collection 2026</div>
+    <div class="m-item"><span class="m-dot"></span>Luxury Footwear</div>
+    <div class="m-item"><span class="m-dot"></span>Handcrafted Excellence</div>
+    <div class="m-item"><span class="m-dot"></span>100% Authentic</div>
+    <div class="m-item"><span class="m-dot"></span>White Glove Service</div>
+  </div>
+</div>
+
+<!-- ══════════ FEATURED PRODUCTS ══════════ -->
+<section class="pad" id="featured" style="background:var(--black);">
+  <div class="sec-head fade">
+    <div class="sec-eye"><div class="sec-eye-ln"></div><span class="sec-eye-txt">Curated Selection</span><div class="sec-eye-ln"></div></div>
+    <h2 class="sec-title">Featured <em>Pieces</em></h2>
+    <p class="sec-desc">Each piece handpicked for craftsmanship, material quality, and timeless aesthetic.</p>
+  </div>
+  <div class="tabs">
+    <button class="tab on">All</button>
+    <button class="tab">Women</button>
+    <button class="tab">Men</button>
+    <button class="tab">Bags</button>
+  </div>
+  <div class="feat-grid">
+    <div class="prod-card fade d1">
+      <div class="prod-img pi-1"><span class="p-icon">👠</span><span class="prod-badge b-new">New</span><button class="prod-wish">♡</button></div>
+      <div class="prod-info">
+        <div class="prod-cat">Women · Heels</div>
+        <div class="prod-name">Classique Stiletto</div>
+        <div class="prod-mat">Full-Grain Leather · Gold Hardware</div>
+        <div class="prod-sizes"><span class="sz">36</span><span class="sz">37</span><span class="sz">38</span><span class="sz">39</span></div>
+        <div class="prod-foot"><div><span class="prod-price">890 MAD</span></div><button class="prod-add">+</button></div>
+      </div>
+    </div>
+    <div class="prod-card fade d2">
+      <div class="prod-img pi-2"><span class="p-icon">👞</span><span class="prod-badge b-hot">Bestseller</span><button class="prod-wish">♡</button></div>
+      <div class="prod-info">
+        <div class="prod-cat">Men · Oxford</div>
+        <div class="prod-name">Grand Oxford Derby</div>
+        <div class="prod-mat">Calfskin Leather · Brogue Detail</div>
+        <div class="prod-sizes"><span class="sz">41</span><span class="sz">42</span><span class="sz">43</span><span class="sz">44</span></div>
+        <div class="prod-foot"><div><span class="prod-price">1,200 MAD</span></div><button class="prod-add">+</button></div>
+      </div>
+    </div>
+    <div class="prod-card fade d3">
+      <div class="prod-img pi-3"><span class="p-icon">👜</span><span class="prod-badge b-ltd">Limited</span><button class="prod-wish">♡</button></div>
+      <div class="prod-info">
+        <div class="prod-cat">Women · Bags</div>
+        <div class="prod-name">Prestige Tote Noir</div>
+        <div class="prod-mat">Pebbled Leather · Chain Strap</div>
+        <div class="prod-foot" style="margin-top:30px;"><div><span class="prod-price">1,650 MAD</span></div><button class="prod-add">+</button></div>
+      </div>
+    </div>
+    <div class="prod-card fade d4">
+      <div class="prod-img pi-4"><span class="p-icon">🥿</span><span class="prod-badge b-sale">−30%</span><button class="prod-wish">♡</button></div>
+      <div class="prod-info">
+        <div class="prod-cat">Women · Loafers</div>
+        <div class="prod-name">Velvet Loafer Gold</div>
+        <div class="prod-mat">Italian Suede · Bit Loafer</div>
+        <div class="prod-sizes"><span class="sz">36</span><span class="sz">37</span><span class="sz">38</span></div>
+        <div class="prod-foot"><div><span class="prod-price">560 MAD</span><span class="prod-old">800 MAD</span></div><button class="prod-add">+</button></div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:48px;" class="fade">
+    <a href="#" class="btn-outline">View All 500+ Styles <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:6px" viewBox="0 0 24 24"><path d="m5 12 14 0M12 5l7 7-7 7"/></svg></a>
+  </div>
+</section>
+
+<!-- ══════════ BESTSELLERS ══════════ -->
+<section class="bs-strip">
+  <div class="sec-head fade">
+    <div class="sec-eye"><div class="sec-eye-ln"></div><span class="sec-eye-txt">Most Loved</span><div class="sec-eye-ln"></div></div>
+    <h2 class="sec-title">Best <em>Sellers</em></h2>
+    <p class="sec-desc">The pieces our clients keep coming back for — tried, tested, and adored.</p>
+  </div>
+  <div class="bs-grid">
+    <div class="bs-card fade d1">
+      <div class="bs-img">👠</div>
+      <div>
+        <div class="bs-rank">#01</div>
+        <div class="bs-name">Classique Stiletto</div>
+        <div class="bs-sub">Women · Heels</div>
+        <div class="bs-bar"><div class="bs-fill" style="width:94%"></div></div>
+      </div>
+      <div class="bs-right"><div class="bs-price">890 MAD</div><div class="bs-sold">342 sold</div></div>
+    </div>
+    <div class="bs-card fade d2">
+      <div class="bs-img">👞</div>
+      <div>
+        <div class="bs-rank">#02</div>
+        <div class="bs-name">Grand Oxford Derby</div>
+        <div class="bs-sub">Men · Oxford</div>
+        <div class="bs-bar"><div class="bs-fill" style="width:78%"></div></div>
+      </div>
+      <div class="bs-right"><div class="bs-price">1,200 MAD</div><div class="bs-sold">280 sold</div></div>
+    </div>
+    <div class="bs-card fade d3">
+      <div class="bs-img">👜</div>
+      <div>
+        <div class="bs-rank">#03</div>
+        <div class="bs-name">Prestige Tote Noir</div>
+        <div class="bs-sub">Women · Bags</div>
+        <div class="bs-bar"><div class="bs-fill" style="width:65%"></div></div>
+      </div>
+      <div class="bs-right"><div class="bs-price">1,650 MAD</div><div class="bs-sold">215 sold</div></div>
+    </div>
+    <div class="bs-card fade d1">
+      <div class="bs-img">🩴</div>
+      <div>
+        <div class="bs-rank">#04</div>
+        <div class="bs-name">Riviera Sandal</div>
+        <div class="bs-sub">Women · Sandals</div>
+        <div class="bs-bar"><div class="bs-fill" style="width:59%"></div></div>
+      </div>
+      <div class="bs-right"><div class="bs-price">620 MAD</div><div class="bs-sold">198 sold</div></div>
+    </div>
+    <div class="bs-card fade d2">
+      <div class="bs-img">👟</div>
+      <div>
+        <div class="bs-rank">#05</div>
+        <div class="bs-name">Urban Sneaker Blanc</div>
+        <div class="bs-sub">Men · Sneakers</div>
+        <div class="bs-bar"><div class="bs-fill" style="width:52%"></div></div>
+      </div>
+      <div class="bs-right"><div class="bs-price">780 MAD</div><div class="bs-sold">174 sold</div></div>
+    </div>
+    <div class="bs-card fade d3">
+      <div class="bs-img">🥾</div>
+      <div>
+        <div class="bs-rank">#06</div>
+        <div class="bs-name">Chelsea Boot Noir</div>
+        <div class="bs-sub">Unisex · Boots</div>
+        <div class="bs-bar"><div class="bs-fill" style="width:44%"></div></div>
+      </div>
+      <div class="bs-right"><div class="bs-price">1,050 MAD</div><div class="bs-sold">152 sold</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ NEW ARRIVALS ══════════ -->
+<section class="pad" style="background:var(--black);">
+  <div class="sec-head fade">
+    <div class="sec-eye"><div class="sec-eye-ln"></div><span class="sec-eye-txt">Just Dropped</span><div class="sec-eye-ln"></div></div>
+    <h2 class="sec-title">New <em>Arrivals</em></h2>
+    <p class="sec-desc">Fresh from our buyers — the newest additions to the COSMAN universe.</p>
+  </div>
+  <div class="new-grid">
+    <div class="prod-card fade d1">
+      <div class="prod-img pi-5"><span class="p-icon">👡</span><span class="prod-badge b-new">New</span><button class="prod-wish">♡</button></div>
+      <div class="prod-info">
+        <div class="prod-cat">Women · Mules</div>
+        <div class="prod-name">Dorée Mule Heel</div>
+        <div class="prod-mat">Satin Finish · Block Heel</div>
+        <div class="prod-sizes"><span class="sz">36</span><span class="sz">37</span><span class="sz">38</span><span class="sz">40</span></div>
+        <div class="prod-foot"><div><span class="prod-price">740 MAD</span></div><button class="prod-add">+</button></div>
+      </div>
+    </div>
+    <div class="prod-card fade d2">
+      <div class="prod-img pi-6"><span class="p-icon">👝</span><span class="prod-badge b-new">New</span><button class="prod-wish">♡</button></div>
+      <div class="prod-info">
+        <div class="prod-cat">Women · Clutch</div>
+        <div class="prod-name">Soirée Clutch Or</div>
+        <div class="prod-mat">Velvet & Gold Chain</div>
+        <div class="prod-foot" style="margin-top:30px;"><div><span class="prod-price">490 MAD</span></div><button class="prod-add">+</button></div>
+      </div>
+    </div>
+    <div class="prod-card fade d3">
+      <div class="prod-img pi-7"><span class="p-icon">🥿</span><span class="prod-badge b-new">New</span><button class="prod-wish">♡</button></div>
+      <div class="prod-info">
+        <div class="prod-cat">Men · Loafers</div>
+        <div class="prod-name">Signature Loafer CM</div>
+        <div class="prod-mat">Crocodile-Embossed Leather</div>
+        <div class="prod-sizes"><span class="sz">40</span><span class="sz">41</span><span class="sz">42</span><span class="sz">43</span></div>
+        <div class="prod-foot"><div><span class="prod-price">980 MAD</span></div><button class="prod-add">+</button></div>
+      </div>
+    </div>
+    <div class="prod-card fade d4">
+      <div class="prod-img pi-8"><span class="p-icon">🩴</span><span class="prod-badge b-new">New</span><button class="prod-wish">♡</button></div>
+      <div class="prod-info">
+        <div class="prod-cat">Women · Sandals</div>
+        <div class="prod-name">Lumière Flat Sandal</div>
+        <div class="prod-mat">Leather Straps · Gold Buckle</div>
+        <div class="prod-sizes"><span class="sz">36</span><span class="sz">37</span><span class="sz">39</span><span class="sz">40</span></div>
+        <div class="prod-foot"><div><span class="prod-price">550 MAD</span></div><button class="prod-add">+</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ BRAND STORY ══════════ -->
+<section class="story-wrap" id="story">
+  <div class="story-frame fade">
+    <div class="story-img"><div class="story-inner">✦</div></div>
+    <div class="story-accent"></div>
+    <div class="story-badge2"><div class="sb-num">15+</div><div class="sb-txt">Years of<br/>Excellence</div></div>
+  </div>
+  <div class="fade d2">
+    <div class="sec-eye" style="margin-bottom:18px;"><div class="sec-eye-ln"></div><span class="sec-eye-txt">Our Story</span></div>
+    <h2 class="sec-title" style="text-align:left;margin-bottom:22px;">Born from a Passion<br/>for <em>True Quality</em></h2>
+    <blockquote class="story-quote">"Every step you take should be a statement."</blockquote>
+    <p class="story-p">COSMAN was born from a deep belief that every person deserves to walk with confidence. From our flagship store in Morocco, we curate the finest footwear — each piece selected for craftsmanship, material, and timeless appeal.</p>
+    <p class="story-p">We are not just a shoe store. We are a destination for those who value quality, who understand that the right pair changes everything.</p>
+    <div class="vals">
+      <div class="val"><div class="val-ico">⚡</div><div><div class="val-t">Premium Quality</div><div class="val-d">Only the finest leathers</div></div></div>
+      <div class="val"><div class="val-ico">✦</div><div><div class="val-t">Curated Selection</div><div class="val-d">Expert-handpicked only</div></div></div>
+      <div class="val"><div class="val-ico">◈</div><div><div class="val-t">100% Authentic</div><div class="val-d">Authenticity guaranteed</div></div></div>
+      <div class="val"><div class="val-ico">◉</div><div><div class="val-t">White Glove Service</div><div class="val-d">Personal styling help</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TESTIMONIALS ══════════ -->
+<section class="testi">
+  <div class="sec-head fade">
+    <div class="sec-eye"><div class="sec-eye-ln"></div><span class="sec-eye-txt">Client Stories</span><div class="sec-eye-ln"></div></div>
+    <h2 class="sec-title">What Our <em>Clients</em> Say</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="t-card fade d1">
+      <div class="t-qmark">"</div>
+      <div class="t-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <p class="t-text">"COSMAN changed how I think about shoes. The quality is unmatched — I get compliments every day on my Classique heels. Nothing compares."</p>
+      <div class="t-author"><div class="t-av">S</div><div><div class="t-name">Sofia M.</div><div class="t-loc">Casablanca, Morocco</div></div></div>
+    </div>
+    <div class="t-card fade d2">
+      <div class="t-qmark">"</div>
+      <div class="t-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <p class="t-text">"The store is an experience — and the online shop captures that same elegance perfectly. Fast delivery, beautiful packaging. This is a true luxury brand."</p>
+      <div class="t-author"><div class="t-av">K</div><div><div class="t-name">Karim A.</div><div class="t-loc">Rabat, Morocco</div></div></div>
+    </div>
+    <div class="t-card fade d3">
+      <div class="t-qmark">"</div>
+      <div class="t-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <p class="t-text">"I've shopped luxury brands across Europe and COSMAN stands right beside them. The bag I ordered was stunning. Worth every single dirham."</p>
+      <div class="t-author"><div class="t-av">L</div><div><div class="t-name">Leila H.</div><div class="t-loc">Marrakech, Morocco</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ NEWSLETTER ══════════ -->
+<section class="nl">
+  <div class="nl-inner fade">
+    <div class="nl-diamond"><div class="nl-dln"></div><div class="nl-dmnd"></div><div class="nl-dln r"></div></div>
+    <h2 class="nl-title">Join the <em>Inner Circle</em></h2>
+    <p class="nl-desc">Be the first to discover new collections, exclusive offers, and private sale events — for members who appreciate the finer things.</p>
+    <div class="nl-form">
+      <input type="email" class="nl-inp" placeholder="Your email address"/>
+      <button class="nl-sub">Subscribe</button>
+    </div>
+    <div class="nl-trust">
+      <span class="nl-ti"><span class="nl-tick">✓</span> No spam, ever</span>
+      <span class="nl-ti"><span class="nl-tick">✓</span> Exclusive access</span>
+      <span class="nl-ti"><span class="nl-tick">✓</span> Unsubscribe anytime</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><div class="ft-lbadge">CM</div><span class="ft-lname">COSMAN</span></div>
+      <p class="ft-desc">Premium footwear and accessories for those who demand the finest. Curated with passion, delivered with care.</p>
+      <div class="ft-soc">
+        <a class="soc-btn" href="#">
+          <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a class="soc-btn" href="#">
+          <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a class="soc-btn" href="#">
+          <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.26 8.26 0 004.84 1.55V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="ft-col-t">Collections</div>
+      <ul class="ft-links"><li><a href="#">Women's Shoes</a></li><li><a href="#">Men's Shoes</a></li><li><a href="#">Bags & Purses</a></li><li><a href="#">New Arrivals</a></li><li><a href="#">Private Sale</a></li><li><a href="#">Gift Cards</a></li></ul>
+    </div>
+    <div>
+      <div class="ft-col-t">Client Care</div>
+      <ul class="ft-links"><li><a href="#">Size Guide</a></li><li><a href="#">Order Tracking</a></li><li><a href="#">Returns & Exchange</a></li><li><a href="#">Shipping Policy</a></li><li><a href="#">Care Instructions</a></li><li><a href="#">Contact Us</a></li></ul>
+    </div>
+    <div>
+      <div class="ft-col-t">COSMAN</div>
+      <ul class="ft-links"><li><a href="#">Our Story</a></li><li><a href="#">Flagship Store</a></li><li><a href="#">Sustainability</a></li><li><a href="#">Press</a></li><li><a href="#">Careers</a></li><li><a href="#">B2B / Wholesale</a></li></ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p class="ft-copy">© 2026 <span>COSMAN</span> — All Rights Reserved. Made in Morocco with ♥</p>
+    <div class="ft-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div>
+  </div>
+</footer>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+  setTimeout(()=>{ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';},90);
+});
+
+// Nav scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
+});
+
+// Fade-in on scroll
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:0.12});
+document.querySelectorAll('.fade').forEach(el=>obs.observe(el));
+
+// Tabs
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+  });
+});
+
+// Wishlist toggle
+document.querySelectorAll('.prod-wish').forEach(b=>{
+  b.addEventListener('click',e=>{
+    e.stopPropagation();
+    b.textContent = b.textContent==='♡' ? '♥' : '♡';
+    b.style.color = b.textContent==='♥' ? 'var(--gold)' : '';
+  });
+});
+
+// Add to cart micro-animation
+document.querySelectorAll('.prod-add').forEach(b=>{
+  b.addEventListener('click',e=>{
+    e.stopPropagation();
+    b.textContent='✓';
+    b.style.background='var(--gold)';
+    b.style.color='var(--black)';
+    setTimeout(()=>{b.textContent='+';b.style.background='';b.style.color='';},1200);
+  });
+});
+</script>
+</body>
+</html>
+<script id="__base44_dark_class_post__">document.documentElement.classList.remove('dark');</script></body></html>
