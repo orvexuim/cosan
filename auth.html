@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account | COSMAN Luxury Shoes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0A0A0A;
+      --black-soft: #111111;
+      --black-card: #161616;
+      --black-border: #2A2A2A;
+      --gold: #C9A84C;
+      --gold-light: #E2C97E;
+      --gold-glow: rgba(201,168,76,0.12);
+      --cream: #F5F0E8;
+      --text-muted: #888888;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--black);
+      color: var(--cream);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-top: 100px;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--black-border); border-radius: var(--radius-full); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+    .screen-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .auth-screen {
+      display: none; opacity: 0; transform: translateY(15px); transition: var(--transition);
+      max-width: 480px; margin: 40px auto; background: var(--black-soft);
+      border: 1px solid var(--black-border); border-radius: var(--radius-lg); padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .auth-screen.active { display: block; opacity: 1; transform: translateY(0); }
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 700; letter-spacing: 1px; }
+    .screen-title { font-size: 28px; text-align: center; margin-bottom: 8px; color: var(--cream); }
+    .screen-subtitle { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 30px; line-height: 1.5; }
+
+    .form-group { margin-bottom: 20px; position: relative; }
+    .form-label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; color: var(--text-muted); font-weight: 600; }
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .form-input {
+      width: 100%; background: var(--black-card); border: 1px solid var(--black-border);
+      color: var(--cream); padding: 14px 16px; font-size: 14px; border-radius: var(--radius-md);
+      transition: var(--transition); font-family: 'Inter', sans-serif;
+    }
+    .form-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
+    .password-toggle {
+      position: absolute; right: 16px; background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+    }
+    .password-toggle:hover { color: var(--gold); }
+    .error-msg { font-size: 12px; color: var(--gold-light); margin-top: 6px; display: none; }
+
+    .strength-meter { margin-top: 10px; }
+    .strength-bar { height: 4px; background: var(--black-border); border-radius: var(--radius-full); overflow: hidden; margin-bottom: 6px; }
+    .strength-fill { height: 100%; width: 0%; transition: var(--transition); background: var(--text-muted); }
+    .strength-text { font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); }
+
+    .form-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-size: 13px; }
+    .checkbox-container { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; font-size: 13px; color: var(--text-muted); }
+    .checkbox-container input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+    .checkmark {
+      height: 18px; width: 18px; background-color: var(--black-card); border: 1px solid var(--black-border);
+      border-radius: var(--radius-sm); display: inline-block; position: relative; transition: var(--transition);
+    }
+    .checkbox-container:hover input ~ .checkmark { border-color: var(--gold); }
+    .checkbox-container input:checked ~ .checkmark { background-color: var(--gold); border-color: var(--gold); }
+    .checkmark:after {
+      content: ""; position: absolute; display: none; left: 5px; top: 2px; width: 4px; height: 8px;
+      border: solid var(--black); border-width: 0 2px 2px 0; transform: rotate(45deg);
+    }
+    .checkbox-container input:checked ~ .checkmark:after { display: block; }
+
+    .btn {
+      width: 100%; padding: 15px; font-size: 12px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; border: none; border-radius: var(--radius-md); cursor: pointer;
+      transition: var(--transition); display: flex; justify-content: center; align-items: center; gap: 10px;
+    }
+    .btn-gold { background: var(--gold); color: var(--black); }
+    .btn-gold:hover { background: var(--gold-light); box-shadow: 0 4px 15px rgba(201,168,76,0.3); }
+    .btn-outline { background: transparent; border: 1px solid var(--black-border); color: var(--cream); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); }
+
+    .screen-link { color: var(--gold); text-decoration: none; transition: var(--transition); font-weight: 500; }
+    .screen-link:hover { color: var(--gold-light); text-decoration: underline; }
+    .switch-screen-text { text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-muted); }
+
+    .divider { display: flex; align-items: center; text-align: center; margin: 24px 0; color: var(--text-muted); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--black-border); }
+    .divider:not(:empty)::before { margin-right: .5em; }
+    .divider:not(:empty)::after { margin-left: .5em; }
+
+    .social-row { display: flex; gap: 12px; }
+    .btn-social {
+      flex: 1; background: var(--black-card); border: 1px solid var(--black-border); border-radius: var(--radius-md);
+      padding: 12px; color: var(--cream); font-size: 12px; font-weight: 500; cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-social:hover { border-color: var(--gold); background: var(--black-soft); }
+    .btn-social svg { width: 16px; height: 16px; fill: currentColor; }
+
+    .success-container { display: none; text-align: center; padding: 20px 0; }
+    .success-icon {
+      width: 64px; height: 64px; border: 2px solid var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: var(--gold);
+    }
+    .success-icon svg { width: 32px; height: 32px; fill: currentColor; }
+
+    /* PROFILE SCREEN */
+    .profile-screen {
+      display: none; opacity: 0; transform: translateY(15px); transition: var(--transition);
+      width: 100%; margin: 40px auto; background: var(--black-soft); border: 1px solid var(--black-border);
+      border-radius: var(--radius-lg); padding: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.5); overflow: hidden;
+    }
+    .profile-screen.active { display: flex; opacity: 1; transform: translateY(0); }
+
+    .profile-sidebar { width: 280px; border-right: 1px solid var(--black-border); padding: 40px 24px; background: var(--black-card); display: flex; flex-direction: column; align-items: center; }
+    .avatar-wrapper { position: relative; margin-bottom: 20px; }
+    .profile-avatar {
+      width: 80px; height: 80px; border: 2px solid var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif;
+      font-size: 28px; font-weight: 700; color: var(--gold); background: var(--black-soft); text-transform: uppercase;
+    }
+    .tier-badge {
+      position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); background: var(--gold);
+      color: var(--black); font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      padding: 3px 8px; border-radius: var(--radius-full); white-space: nowrap; box-shadow: 0 2px 8px rgba(201,168,76,0.3);
+    }
+    .user-info { text-align: center; margin-bottom: 30px; width: 100%; }
+    .user-display-name { font-size: 18px; font-weight: 600; color: var(--cream); margin-bottom: 6px; word-break: break-all; }
+    .user-member-since { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .sidebar-nav { list-style: none; width: 100%; display: flex; flex-direction: column; gap: 8px; }
+    .sidebar-nav-btn {
+      width: 100%; background: none; border: none; padding: 12px 16px; text-align: left; font-size: 11px;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted);
+      border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 12px;
+    }
+    .sidebar-nav-btn svg { width: 16px; height: 16px; fill: currentColor; }
+    .sidebar-nav-btn:hover { color: var(--cream); background: rgba(255,255,255,0.02); }
+    .sidebar-nav-btn.active { color: var(--gold); background: var(--gold-glow); }
+    .sidebar-nav-btn.logout-btn { margin-top: 20px; color: #ff5555; }
+    .sidebar-nav-btn.logout-btn:hover { background: rgba(255,85,85,0.08); }
+
+    .profile-main { flex: 1; padding: 40px; background: var(--black-soft); min-height: 550px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .tab-title { font-size: 24px; margin-bottom: 8px; color: var(--cream); }
+    .tab-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 30px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-grid-full { grid-column: span 2; }
+
+    /* Toggle Switches */
+    .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--black-border); }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-text-wrapper { max-width: 80%; }
+    .settings-label { font-size: 14px; font-weight: 500; color: var(--cream); margin-bottom: 4px; }
+    .settings-desc { font-size: 12px; color: var(--text-muted); }
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--black-border); transition: .3s; border-radius: 24px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: var(--text-muted); transition: .3s; border-radius: 50%; }
+    .switch input:checked + .slider { background-color: var(--gold); }
+    .switch input:checked + .slider:before { transform: translateX(20px); background-color: var(--black); }
+
+    /* Danger Zone */
+    .danger-zone { margin-top: 40px; border: 1px solid rgba(255,85,85,0.3); background: rgba(255,85,85,0.02); border-radius: var(--radius-lg); padding: 24px; }
+    .danger-zone h4 { color: #ff5555; font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 8px; }
+    .danger-zone p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+
+    /* Orders History Table */
+    .order-filters-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .filter-select {
+      background: var(--black-card); border: 1px solid var(--black-border); color: var(--cream);
+      padding: 8px 16px; font-size: 12px; border-radius: var(--radius-md); outline: none; cursor: pointer;
+      font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .filter-select:focus { border-color: var(--gold); }
+    .orders-table-wrapper { overflow-x: auto; }
+    .orders-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    .orders-table th { border-bottom: 1px solid var(--black-border); padding: 12px 16px; color: var(--text-muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+    .orders-table td { padding: 16px; border-bottom: 1px solid var(--black-border); vertical-align: middle; }
+
+    .order-status { display: inline-block; padding: 4px 8px; border-radius: var(--radius-sm); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-delivered { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
+    .status-processing { background: rgba(201, 168, 76, 0.1); color: var(--gold); }
+    .status-shipped { background: rgba(52, 152, 219, 0.1); color: #3498db; }
+
+    .btn-view-details { background: none; border: 1px solid var(--black-border); color: var(--cream); padding: 6px 12px; font-size: 11px; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); text-transform: uppercase; letter-spacing: 0.5px; }
+    .btn-view-details:hover { border-color: var(--gold); color: var(--gold); }
+
+    .order-details-row { display: none; background: rgba(255,255,255,0.01); }
+    .order-details-panel { padding: 20px; border-bottom: 1px solid var(--black-border); }
+    .order-details-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 12px; }
+    .detail-items-list { display: flex; flex-direction: column; gap: 12px; }
+    .detail-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+    .item-info { display: flex; align-items: center; gap: 12px; }
+    .item-emoji { width: 40px; height: 40px; background: var(--black-card); border: 1px solid var(--black-border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .item-name { font-weight: 500; }
+    .item-qty { font-size: 11px; color: var(--text-muted); }
+    .item-price { font-weight: 600; color: var(--cream); }
+
+    /* Wishlist Tab Grid */
+    .wishlist-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .product-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: var(--radius-md); padding: 20px; text-align: center; transition: var(--transition); position: relative; }
+    .product-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+    .product-image-box { height: 120px; background: var(--black-soft); border: 1px solid rgba(255,255,255,0.02); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 54px; margin-bottom: 16px; }
+    .product-name { font-size: 15px; font-weight: 500; color: var(--cream); margin-bottom: 8px; }
+    .product-price { font-size: 14px; font-weight: 600; color: var(--gold); margin-bottom: 20px; }
+    .wishlist-actions { display: flex; flex-direction: column; gap: 8px; }
+    .btn-wishlist-cart { padding: 10px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; background: var(--gold); color: var(--black); border: none; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); }
+    .btn-wishlist-cart:hover { background: var(--gold-light); }
+    .btn-wishlist-remove { padding: 10px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; background: transparent; color: var(--text-muted); border: 1px solid var(--black-border); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); }
+    .btn-wishlist-remove:hover { color: #ff5555; border-color: rgba(255,85,85,0.3); }
+
+    /* Toast Notification system */
+    .toast-notification {
+      position: fixed; bottom: 24px; right: 24px; background: var(--black-soft); border: 1px solid var(--gold);
+      border-radius: var(--radius-md); padding: 16px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1100;
+      transform: translateY(100px); opacity: 0; transition: var(--transition); display: flex; align-items: center; gap: 12px;
+    }
+    .toast-notification.show { transform: translateY(0); opacity: 1; }
+    .toast-icon { color: var(--gold); display: flex; align-items: center; }
+    .toast-message { font-size: 13px; color: var(--cream); }
+
+    /* Mobile Responsive adjustments */
+    @media (max-width: 768px) {
+      body { padding-top: 88px; }
+      nav { padding: 0 16px !important; height: 64px !important; }
+      nav span { font-size: 16px !important; letter-spacing: 2px !important; }
+      nav ul { display: none !important; }
+      .profile-screen { flex-direction: column; }
+      .profile-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--black-border); padding: 30px 20px; }
+      .profile-main { padding: 24px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid-full { grid-column: span 1; }
+      .wishlist-grid { grid-template-columns: 1fr; }
+      .order-filters-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .filter-select { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar Pattern -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.1);">
+    <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+      <div style="width:40px;height:40px;border:2px solid #C9A84C;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#C9A84C;">CM</div>
+      <span style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#F5F0E8;letter-spacing:4px;">COSMAN</span>
+    </a>
+    <ul style="display:flex;gap:36px;list-style:none;">
+      <li><a href="index.html" style="text-decoration:none;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#888;">Home</a></li>
+      <li><a href="shop.html" style="text-decoration:none;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#888;">Shop</a></li>
+      <li><a href="cart.html" style="text-decoration:none;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#888;">Cart</a></li>
+    </ul>
+    <a id="nav-account-btn" href="auth.html" style="display:flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid #C9A84C;border-radius:9999px;font-size:11px;font-weight:600;color:#F5F0E8;text-decoration:none;background: var(--gold-glow);">My Account</a>
+  </nav>
+
+  <div class="screen-container">
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen" class="auth-screen active">
+      <h2 class="screen-title">Welcome Back</h2>
+      <p class="screen-subtitle">Sign in to your premium luxury portal to track orders and manage your tailored selections.</p>
+      
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <div class="input-wrapper">
+            <input type="email" id="login-email" class="form-input" placeholder="name@domain.com">
+          </div>
+          <div class="error-msg" id="login-email-err">Please enter a valid email address</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••">
+          </div>
+          <div class="error-msg" id="login-password-err">Password must be at least 8 characters</div>
+        </div>
+
+        <div class="form-actions">
+          <label class="checkbox-container">
+            <input type="checkbox" id="login-remember" checked>
+            <span class="checkmark"></span>
+            Remember me
+          </label>
+          <a href="#" class="screen-link" onclick="switchScreen('forgot')">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-gold">Sign In</button>
+      </form>
+
+      <div class="divider">Or Continue With</div>
+
+      <div class="social-row">
+        <button class="btn-social" onclick="simulateSocialLogin('Google')">
+          <svg viewBox="0 0 24 24"><path d="M12.24 10.285V13.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l2.427-2.334C17.955 2.192 15.34 1 12.24 1 6.033 1 1 6.033 1 12.24s5.033 11.24 11.24 11.24c6.478 0 10.793-4.537 10.793-10.985 0-.74-.078-1.3-.173-1.854H12.24z"/></svg>
+          Google
+        </button>
+        <button class="btn-social" onclick="simulateSocialLogin('Facebook')">
+          <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"/></svg>
+          Facebook
+        </button>
+      </div>
+
+      <p class="switch-screen-text">New to COSMAN? <a href="#" class="screen-link" onclick="switchScreen('register')">Create Account</a></p>
+    </div>
+
+    <!-- 2. REGISTER SCREEN -->
+    <div id="register-screen" class="auth-screen">
+      <h2 class="screen-title">Create Account</h2>
+      <p class="screen-subtitle">Join COSMAN Loyalty Tier benefits, curate wishlist edits, and access priority checkout.</p>
+      
+      <form id="register-form" novalidate>
+        <div style="display:flex; gap:16px; margin-bottom: 20px;">
+          <div style="flex:1;">
+            <label class="form-label" for="reg-first-name">First Name</label>
+            <input type="text" id="reg-first-name" class="form-input" placeholder="Edward">
+            <div class="error-msg" id="reg-first-name-err">Required</div>
+          </div>
+          <div style="flex:1;">
+            <label class="form-label" for="reg-last-name">Last Name</label>
+            <input type="text" id="reg-last-name" class="form-input" placeholder="Cosman">
+            <div class="error-msg" id="reg-last-name-err">Required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Email Address</label>
+          <input type="email" id="reg-email" class="form-input" placeholder="edward@cosman.com">
+          <div class="error-msg" id="reg-email-err">Please enter a valid email address</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-phone">Phone Number (Optional)</label>
+          <input type="tel" id="reg-phone" class="form-input" placeholder="+33 6 12 34 56 78">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="reg-password" class="form-input" placeholder="••••••••">
+            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('reg-password', this)">Show</button>
+          </div>
+          <div class="strength-meter">
+            <div class="strength-bar"><div id="strength-fill" class="strength-fill"></div></div>
+            <div class="strength-text">Password strength: <span id="strength-label">None</span></div>
+          </div>
+          <div class="error-msg" id="reg-password-err">Must be at least 8 characters with numbers & symbols</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-confirm-password">Confirm Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="reg-confirm-password" class="form-input" placeholder="••••••••">
+            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('reg-confirm-password', this)">Show</button>
+          </div>
+          <div class="error-msg" id="reg-confirm-password-err">Passwords do not match</div>
+        </div>
+
+        <div style="margin-bottom:24px;">
+          <label class="checkbox-container">
+            <input type="checkbox" id="reg-newsletter" checked>
+            <span class="checkmark"></span>
+            Subscribe to the COSMAN Private Circle Newsletter
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-gold">Create Account</button>
+      </form>
+
+      <p class="switch-screen-text">Already have an account? <a href="#" class="screen-link" onclick="switchScreen('login')">Sign In</a></p>
+    </div>
+
+    <!-- 3. FORGOT PASSWORD SCREEN -->
+    <div id="forgot-screen" class="auth-screen">
+      <div id="forgot-input-state">
+        <h2 class="screen-title">Reset Password</h2>
+        <p class="screen-subtitle">Provide your premium registered email and we will issue an immediate recovery verification.</p>
+        
+        <form id="forgot-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="forgot-email">Email Address</label>
+            <input type="email" id="forgot-email" class="form-input" placeholder="name@domain.com">
+            <div class="error-msg" id="forgot-email-err">Please enter a valid email address</div>
+          </div>
+          <button type="submit" class="btn btn-gold" style="margin-bottom:20px;">Send Reset Link</button>
+        </form>
+      </div>
+
+      <div id="forgot-success-state" class="success-container">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        </div>
+        <h3 style="font-size:22px; margin-bottom:12px;">Verification Sent</h3>
+        <p style="font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:24px;">
+          An exclusive password recovery token has been transmitted to <strong id="reset-target-email" style="color:var(--cream)">your email</strong>. Please check your inbox.
+        </p>
+      </div>
+
+      <div style="text-align:center;">
+        <a href="#" class="screen-link" style="font-size:13px;" onclick="switchScreen('login')">Back to Sign In</a>
+      </div>
+    </div>
+
+    <!-- 4. USER PROFILE SCREEN -->
+    <div id="profile-screen" class="profile-screen">
+      <!-- Left Sidebar -->
+      <div class="profile-sidebar">
+        <div class="avatar-wrapper">
+          <div class="profile-avatar" id="sidebar-avatar">CM</div>
+          <span class="tier-badge">Gold Member</span>
+        </div>
+        <div class="user-info">
+          <div class="user-display-name" id="sidebar-display-name">Edward Cosman</div>
+          <div class="user-member-since">Member Since: July 2026</div>
+        </div>
+        <ul class="sidebar-nav">
+          <li>
+            <button class="sidebar-nav-btn active" onclick="switchProfileTab('profile', this)">
+              <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              Profile Settings
+            </button>
+          </li>
+          <li>
+            <button class="sidebar-nav-btn" onclick="switchProfileTab('orders', this)">
+              <svg viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm0 10c-2.76 0-5-2.24-5-5h2c0 1.66 1.34 3 3 3s3-1.34 3-3h2c0 2.76-2.24 5-5 5z"/></svg>
+              Order History
+            </button>
+          </li>
+          <li>
+            <button class="sidebar-nav-btn" onclick="switchProfileTab('wishlist', this)">
+              <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              My Wishlist
+            </button>
+          </li>
+          <li>
+            <button class="sidebar-nav-btn" onclick="switchProfileTab('settings', this)">
+              <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+              Preferences
+            </button>
+          </li>
+          <li>
+            <button class="sidebar-nav-btn logout-btn" onclick="triggerLogout()">
+              <svg viewBox="0 0 24 24"><path d="M13 3h-2v10h2V3zm4.33 2.1l-1.41 1.41C17.92 7.88 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.08-4.12 2.08-5.5l-1.41-1.41C4.04 6.8 3 9.27 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.73-1.04-5.2-2.67-6.9z"/></svg>
+              Sign Out
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right Main Content -->
+      <div class="profile-main">
+        
+        <!-- Tab A: PROFILE FORM -->
+        <div id="tab-profile" class="tab-content active">
+          <h3 class="tab-title">Private Portfolio</h3>
+          <p class="tab-subtitle">Update your personal shipping coordination and communication coordinates.</p>
+          
+          <form id="profile-edit-form" novalidate>
+            <div class="form-grid">
+              <div>
+                <label class="form-label" for="prof-first-name">First Name</label>
+                <input type="text" id="prof-first-name" class="form-input" value="Edward">
+                <div class="error-msg" id="prof-first-name-err">Required</div>
+              </div>
+              <div>
+                <label class="form-label" for="prof-last-name">Last Name</label>
+                <input type="text" id="prof-last-name" class="form-input" value="Cosman">
+                <div class="error-msg" id="prof-last-name-err">Required</div>
+              </div>
+              <div class="form-grid-full">
+                <label class="form-label" for="prof-email">Email Address</label>
+                <input type="email" id="prof-email" class="form-input" value="edward@cosman.com">
+                <div class="error-msg" id="prof-email-err">Must be a valid email</div>
+              </div>
+              <div class="form-grid-full">
+                <label class="form-label" for="prof-phone">Phone Number</label>
+                <input type="tel" id="prof-phone" class="form-input" value="+33 6 12 34 56 78">
+                <div class="error-msg" id="prof-phone-err">Required</div>
+              </div>
+              <div class="form-grid-full">
+                <label class="form-label" for="prof-address">Shipping Address</label>
+                <input type="text" id="prof-address" class="form-input" value="12 Place Vendôme">
+                <div class="error-msg" id="prof-address-err">Required</div>
+              </div>
+              <div>
+                <label class="form-label" for="prof-city">City</label>
+                <input type="text" id="prof-city" class="form-input" value="Paris">
+              </div>
+              <div>
+                <label class="form-label" for="prof-country">Country</label>
+                <input type="text" id="prof-country" class="form-input" value="France">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-gold" style="max-width:200px; margin-top:30px;">Save Settings</button>
+          </form>
+        </div>
+
+        <!-- Tab B: ORDERS HISTORY -->
+        <div id="tab-orders" class="tab-content">
+          <h3 class="tab-title">Your Orders</h3>
+          <p class="tab-subtitle">Track, view, and inspect details of all past luxury footwear commissions.</p>
+          
+          <div class="order-filters-row">
+            <span style="font-size:13px; color:var(--text-muted);">Commissions Ledger</span>
+            <select id="order-status-filter" class="filter-select" onchange="filterOrders(this.value)">
+              <option value="ALL">All Statuses</option>
+              <option value="DELIVERED">Delivered</option>
+              <option value="SHIPPED">Shipped</option>
+              <option value="PROCESSING">Processing</option>
+            </select>
+          </div>
+
+          <div class="orders-table-wrapper">
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>Order No.</th>
+                  <th>Date</th>
+                  <th>Items</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="orders-tbody">
+                <!-- Order 1 -->
+                <tr class="order-row" data-status="PROCESSING">
+                  <td style="font-weight:600; color:var(--gold);">#CM-2026-981</td>
+                  <td style="color:var(--text-muted);">July 14, 2026</td>
+                  <td>1x Gold-Accent Loafer...</td>
+                  <td><span class="order-status status-processing">Processing</span></td>
+                  <td style="font-weight:600;">€1,250.00</td>
+                  <td><button class="btn-view-details" onclick="toggleOrderExpand('details-981')">View Details</button></td>
+                </tr>
+                <tr id="details-981" class="order-details-row">
+                  <td colspan="6">
+                    <div class="order-details-panel">
+                      <div class="order-details-title">Package Contents</div>
+                      <div class="detail-items-list">
+                        <div class="detail-item">
+                          <div class="item-info">
+                            <div class="item-emoji">👞</div>
+                            <div>
+                              <div class="item-name">The Aureum Derby Loafer</div>
+                              <div class="item-qty">Size: 42 | Qty: 1</div>
+                            </div>
+                          </div>
+                          <div class="item-price">€1,250.00</div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Order 2 -->
+                <tr class="order-row" data-status="SHIPPED">
+                  <td style="font-weight:600; color:var(--gold);">#CM-2026-815</td>
+                  <td style="color:var(--text-muted);">July 01, 2026</td>
+                  <td>1x Obsidian Chelsea Boot...</td>
+                  <td><span class="order-status status-shipped">Shipped</span></td>
+                  <td style="font-weight:600;">€1,450.00</td>
+                  <td><button class="btn-view-details" onclick="toggleOrderExpand('details-815')">View Details</button></td>
+                </tr>
+                <tr id="details-815" class="order-details-row">
+                  <td colspan="6">
+                    <div class="order-details-panel">
+                      <div class="order-details-title">Package Contents</div>
+                      <div class="detail-items-list">
+                        <div class="detail-item">
+                          <div class="item-info">
+                            <div class="item-emoji">🥾</div>
+                            <div>
+                              <div class="item-name">The Obsidian Chelsea Boot</div>
+                              <div class="item-qty">Size: 42 | Qty: 1</div>
+                            </div>
+                          </div>
+                          <div class="item-price">€1,450.00</div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Order 3 -->
+                <tr class="order-row" data-status="DELIVERED">
+                  <td style="font-weight:600; color:var(--gold);">#CM-2026-441</td>
+                  <td style="color:var(--text-muted);">May 24, 2026</td>
+                  <td>2x Leather Care Kit, Luxe Velvet...</td>
+                  <td><span class="order-status status-delivered">Delivered</span></td>
+                  <td style="font-weight:600;">€1,090.00</td>
+                  <td><button class="btn-view-details" onclick="toggleOrderExpand('details-441')">View Details</button></td>
+                </tr>
+                <tr id="details-441" class="order-details-row">
+                  <td colspan="6">
+                    <div class="order-details-panel">
+                      <div class="order-details-title">Package Contents</div>
+                      <div class="detail-items-list">
+                        <div class="detail-item">
+                          <div class="item-info">
+                            <div class="item-emoji">👟</div>
+                            <div>
+                              <div class="item-name">The Luxe Velvet Court Sneaker</div>
+                              <div class="item-qty">Size: 42 | Qty: 1</div>
+                            </div>
+                          </div>
+                          <div class="item-price">€950.00</div>
+                        </div>
+                        <div class="detail-item">
+                          <div class="item-info">
+                            <div class="item-emoji">✨</div>
+                            <div>
+                              <div class="item-name">Monogram Leather Care Kit</div>
+                              <div class="item-qty">Qty: 1</div>
+                            </div>
+                          </div>
+                          <div class="item-price">€140.00</div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Order 4 -->
+                <tr class="order-row" data-status="DELIVERED">
+                  <td style="font-weight:600; color:var(--gold);">#CM-2026-112</td>
+                  <td style="color:var(--text-muted);">March 15, 2026</td>
+                  <td>1x Gold Emblem Brogue...</td>
+                  <td><span class="order-status status-delivered">Delivered</span></td>
+                  <td style="font-weight:600;">€1,100.00</td>
+                  <td><button class="btn-view-details" onclick="toggleOrderExpand('details-112')">View Details</button></td>
+                </tr>
+                <tr id="details-112" class="order-details-row">
+                  <td colspan="6">
+                    <div class="order-details-panel">
+                      <div class="order-details-title">Package Contents</div>
+                      <div class="detail-items-list">
+                        <div class="detail-item">
+                          <div class="item-info">
+                            <div class="item-emoji">👞</div>
+                            <div>
+                              <div class="item-name">The Gold Emblem Brogue</div>
+                              <div class="item-qty">Size: 42.5 | Qty: 1</div>
+                            </div>
+                          </div>
+                          <div class="item-price">€1,100.00</div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab C: WISHLIST TAB -->
+        <div id="tab-wishlist" class="tab-content">
+          <h3 class="tab-title">Private Curated Edit</h3>
+          <p class="tab-subtitle">Your reserved and saved selections waiting to be added to active collection suites.</p>
+          
+          <div class="wishlist-grid" id="wishlist-container">
+            <div class="product-card" id="wishlist-card-1">
+              <div class="product-image-box">🥾</div>
+              <h4 class="product-name">The Oro Chelsea Boot</h4>
+              <div class="product-price">€1,450.00</div>
+              <div class="wishlist-actions">
+                <button class="btn-wishlist-cart" onclick="moveToCart(1, 'The Oro Chelsea Boot')">Move to Cart</button>
+                <button class="btn-wishlist-remove" onclick="removeWishlistItem(1)">Remove</button>
+              </div>
+            </div>
+
+            <div class="product-card" id="wishlist-card-2">
+              <div class="product-image-box">👞</div>
+              <h4 class="product-name">Velvet Evening Loafer</h4>
+              <div class="product-price">€1,150.00</div>
+              <div class="wishlist-actions">
+                <button class="btn-wishlist-cart" onclick="moveToCart(2, 'Velvet Evening Loafer')">Move to Cart</button>
+                <button class="btn-wishlist-remove" onclick="removeWishlistItem(2)">Remove</button>
+              </div>
+            </div>
+
+            <div class="product-card" id="wishlist-card-3">
+              <div class="product-image-box">👟</div>
+              <h4 class="product-name">The Gold Gilded Runner</h4>
+              <div class="product-price">€890.00</div>
+              <div class="wishlist-actions">
+                <button class="btn-wishlist-cart" onclick="moveToCart(3, 'The Gold Gilded Runner')">Move to Cart</button>
+                <button class="btn-wishlist-remove" onclick="removeWishlistItem(3)">Remove</button>
+              </div>
+            </div>
+          </div>
+          <div id="wishlist-empty" style="display:none; text-align:center; padding: 40px 0;">
+            <p style="color:var(--text-muted); font-size:14px;">Your luxury wishlist is currently empty.</p>
+          </div>
+        </div>
+
+        <!-- Tab D: SETTINGS TAB -->
+        <div id="tab-settings" class="tab-content">
+          <h3 class="tab-title">Preferences & Security</h3>
+          <p class="tab-subtitle">Configure private circle notices and handle underlying security details.</p>
+          
+          <h4 style="font-size:16px; border-bottom:1px solid var(--black-border); padding-bottom:8px; margin-bottom:16px;">Notification Preferences</h4>
+          <div style="margin-bottom:30px;">
+            <div class="settings-row">
+              <div class="settings-text-wrapper">
+                <div class="settings-label">Email Announcements</div>
+                <div class="settings-desc">Receive invite-only launches and private collection arrivals.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked id="pref-email">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="settings-row">
+              <div class="settings-text-wrapper">
+                <div class="settings-label">SMS Alerts</div>
+                <div class="settings-desc">Get regional event schedules and localized private fittings notices.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="pref-sms">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="settings-row">
+              <div class="settings-text-wrapper">
+                <div class="settings-label">WhatsApp Concierge</div>
+                <div class="settings-desc">Direct private access with your assigned COSMAN shopping advisor.</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked id="pref-whatsapp">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <h4 style="font-size:16px; border-bottom:1px solid var(--black-border); padding-bottom:8px; margin-bottom:16px; margin-top:40px;">Change Password</h4>
+          <form id="profile-password-form" novalidate style="margin-bottom:40px;">
+            <div class="form-group">
+              <label class="form-label" for="settings-old-pass">Current Password</label>
+              <input type="password" id="settings-old-pass" class="form-input" placeholder="••••••••">
+              <div class="error-msg" id="settings-old-pass-err">Must match current registered account credentials</div>
+            </div>
+            <div style="display:flex; gap:16px;">
+              <div style="flex:1;">
+                <label class="form-label" for="settings-new-pass">New Password</label>
+                <input type="password" id="settings-new-pass" class="form-input" placeholder="••••••••">
+                <div class="error-msg" id="settings-new-pass-err">Must be at least 8 characters</div>
+              </div>
+              <div style="flex:1;">
+                <label class="form-label" for="settings-confirm-pass">Confirm New Password</label>
+                <input type="password" id="settings-confirm-pass" class="form-input" placeholder="••••••••">
+                <div class="error-msg" id="settings-confirm-pass-err">Passwords do not match</div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-outline" style="max-width:200px; margin-top:20px;">Update Password</button>
+          </form>
+
+          <div class="danger-zone">
+            <h4>Danger Zone</h4>
+            <p>Once you terminate your COSMAN luxury portfolio membership, all tier loyalty standings and order listings will be permanently expunged.</p>
+            <button class="btn btn-outline" style="border-color:#ff5555; color:#ff5555; max-width:220px;" onclick="triggerAccountDeletion()">Terminate Account</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Global Toast Notification System -->
+  <div id="toast" class="toast-notification">
+    <span class="toast-icon">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    </span>
+    <span id="toast-text" class="toast-message">Success message text</span>
+  </div>
+
+  <script>
+    let currentUser = null;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toast-text');
+      toastText.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 4000);
+    }
+
+    function switchScreen(screenId) {
+      const screens = ['login-screen', 'register-screen', 'forgot-screen', 'profile-screen'];
+      screens.forEach(s => {
+        const el = document.getElementById(s);
+        if (el) {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(15px)';
+          setTimeout(() => { el.classList.remove('active'); }, 300);
+        }
+      });
+      setTimeout(() => {
+        const activeEl = document.getElementById(screenId + '-screen');
+        if (activeEl) {
+          activeEl.classList.add('active');
+          activeEl.offsetHeight;
+          activeEl.style.opacity = '1';
+          activeEl.style.transform = 'translateY(0)';
+        }
+      }, 310);
+    }
+
+    function togglePasswordVisibility(fieldId, btn) {
+      const field = document.getElementById(fieldId);
+      if (field.type === 'password') {
+        field.type = 'text';
+        btn.textContent = 'Hide';
+      } else {
+        field.type = 'password';
+        btn.textContent = 'Show';
+      }
+    }
+
+    const regPassword = document.getElementById('reg-password');
+    const strengthFill = document.getElementById('strength-fill');
+    const strengthLabel = document.getElementById('strength-label');
+
+    if (regPassword) {
+      regPassword.addEventListener('input', function() {
+        const val = this.value;
+        let score = 0;
+        if (val.length >= 8) score++;
+        if (/[A-Z]/.test(val) || /[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+
+        if (val.length === 0) {
+          strengthFill.style.width = '0%';
+          strengthFill.style.background = 'var(--text-muted)';
+          strengthLabel.textContent = 'None';
+        } else if (score === 1) {
+          strengthFill.style.width = '33%';
+          strengthFill.style.background = '#ff5555';
+          strengthLabel.textContent = 'Weak';
+        } else if (score === 2) {
+          strengthFill.style.width = '66%';
+          strengthFill.style.background = 'var(--gold)';
+          strengthLabel.textContent = 'Fair';
+        } else if (score === 3) {
+          strengthFill.style.width = '100%';
+          strengthFill.style.background = '#2ecc71';
+          strengthLabel.textContent = 'Strong';
+        }
+      });
+    }
+
+    // FORM 1: LOGIN
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-password').value;
+      let valid = true;
+
+      if (!emailRegex.test(email)) {
+        document.getElementById('login-email-err').style.display = 'block';
+        valid = false;
+      } else {
+        document.getElementById('login-email-err').style.display = 'none';
+      }
+
+      if (pass.length < 8) {
+        document.getElementById('login-password-err').style.display = 'block';
+        valid = false;
+      } else {
+        document.getElementById('login-password-err').style.display = 'none';
+      }
+
+      if (valid) {
+        loginUser(email, "Edward", "Cosman");
+      }
+    });
+
+    // FORM 2: REGISTER
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const firstName = document.getElementById('reg-first-name').value.trim();
+      const lastName = document.getElementById('reg-last-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const pass = document.getElementById('reg-password').value;
+      const confirmPass = document.getElementById('reg-confirm-password').value;
+      let valid = true;
+
+      if (!firstName) { document.getElementById('reg-first-name-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('reg-first-name-err').style.display = 'none'; }
+
+      if (!lastName) { document.getElementById('reg-last-name-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('reg-last-name-err').style.display = 'none'; }
+
+      if (!emailRegex.test(email)) { document.getElementById('reg-email-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('reg-email-err').style.display = 'none'; }
+
+      if (pass.length < 8) { document.getElementById('reg-password-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('reg-password-err').style.display = 'none'; }
+
+      if (pass !== confirmPass) { document.getElementById('reg-confirm-password-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('reg-confirm-password-err').style.display = 'none'; }
+
+      if (valid) {
+        showToast("Welcome to COSMAN Private Circle!");
+        loginUser(email, firstName, lastName);
+      }
+    });
+
+    // FORM 3: FORGOT PASSWORD
+    document.getElementById('forgot-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('forgot-email').value.trim();
+      if (!emailRegex.test(email)) {
+        document.getElementById('forgot-email-err').style.display = 'block';
+      } else {
+        document.getElementById('forgot-email-err').style.display = 'none';
+        document.getElementById('reset-target-email').textContent = email;
+        document.getElementById('forgot-input-state').style.display = 'none';
+        document.getElementById('forgot-success-state').style.display = 'block';
+        showToast("Password recovery verification sent.");
+      }
+    });
+
+    function loginUser(email, fName, lName) {
+      currentUser = { email, fName, lName };
+      document.getElementById('sidebar-display-name').textContent = `${fName} ${lName}`;
+      
+      const initials = ((fName[0] || '') + (lName[0] || '')).toUpperCase() || 'CM';
+      document.getElementById('sidebar-avatar').textContent = initials;
+      
+      document.getElementById('prof-first-name').value = fName;
+      document.getElementById('prof-last-name').value = lName;
+      document.getElementById('prof-email').value = email;
+
+      const navBtn = document.getElementById('nav-account-btn');
+      navBtn.textContent = email;
+      navBtn.style.borderColor = 'var(--gold)';
+
+      showToast("Access Authorized. Connected to luxury portfolio.");
+      switchScreen('profile');
+    }
+
+    function simulateSocialLogin(platform) {
+      showToast(`Connecting Secure OAuth via ${platform}...`);
+      setTimeout(() => {
+        loginUser(`${platform.toLowerCase()}user@cosman.com`, `${platform} Guest`, "User");
+      }, 1000);
+    }
+
+    // PROFILE TAB NAVIGATION
+    function switchProfileTab(tabName, btn) {
+      document.querySelectorAll('.sidebar-nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const tabs = ['profile', 'orders', 'wishlist', 'settings'];
+      tabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.classList.remove('active');
+      });
+
+      const targetTab = document.getElementById('tab-' + tabName);
+      if (targetTab) targetTab.classList.add('active');
+    }
+
+    // PROFILE EDIT
+    document.getElementById('profile-edit-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const fName = document.getElementById('prof-first-name').value.trim();
+      const lName = document.getElementById('prof-last-name').value.trim();
+      const email = document.getElementById('prof-email').value.trim();
+      let valid = true;
+
+      if (!fName) { document.getElementById('prof-first-name-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('prof-first-name-err').style.display = 'none'; }
+
+      if (!lName) { document.getElementById('prof-last-name-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('prof-last-name-err').style.display = 'none'; }
+
+      if (!emailRegex.test(email)) { document.getElementById('prof-email-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('prof-email-err').style.display = 'none'; }
+
+      if (valid) {
+        currentUser.fName = fName;
+        currentUser.lName = lName;
+        currentUser.email = email;
+        document.getElementById('sidebar-display-name').textContent = `${fName} ${lName}`;
+        const initials = ((fName[0] || '') + (lName[0] || '')).toUpperCase() || 'CM';
+        document.getElementById('sidebar-avatar').textContent = initials;
+        document.getElementById('nav-account-btn').textContent = email;
+        showToast("Profile credentials updated successfully.");
+      }
+    });
+
+    function toggleOrderExpand(detailsRowId) {
+      const row = document.getElementById(detailsRowId);
+      row.style.display = (row.style.display === 'table-row') ? 'none' : 'table-row';
+    }
+
+    function filterOrders(status) {
+      document.querySelectorAll('.order-row').forEach(row => {
+        const rowStatus = row.getAttribute('data-status');
+        const detailsRow = document.getElementById(row.nextElementSibling.id);
+        if (detailsRow) detailsRow.style.display = 'none';
+        
+        if (status === 'ALL' || rowStatus === status) {
+          row.style.display = 'table-row';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function removeWishlistItem(id) {
+      const card = document.getElementById(`wishlist-card-${id}`);
+      if (card) {
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          card.remove();
+          const container = document.getElementById('wishlist-container');
+          if (container.children.length === 0) {
+            document.getElementById('wishlist-empty').style.display = 'block';
+          }
+        }, 300);
+        showToast("Selection removed from curated edit.");
+      }
+    }
+
+    function moveToCart(id, name) {
+      showToast(`"${name}" was transferred to your shopping cart.`);
+      removeWishlistItem(id);
+    }
+
+    // PASSWORD UPDATE
+    document.getElementById('profile-password-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const current = document.getElementById('settings-old-pass').value;
+      const newP = document.getElementById('settings-new-pass').value;
+      const confirmP = document.getElementById('settings-confirm-pass').value;
+      let valid = true;
+
+      if (!current) { document.getElementById('settings-old-pass-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('settings-old-pass-err').style.display = 'none'; }
+
+      if (newP.length < 8) { document.getElementById('settings-new-pass-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('settings-new-pass-err').style.display = 'none'; }
+
+      if (newP !== confirmP) { document.getElementById('settings-confirm-pass-err').style.display = 'block'; valid = false; }
+      else { document.getElementById('settings-confirm-pass-err').style.display = 'none'; }
+
+      if (valid) {
+        showToast("Account security credentials modified successfully.");
+        document.getElementById('profile-password-form').reset();
+      }
+    });
+
+    function triggerAccountDeletion() {
+      if (confirm("Are you absolutely sure you wish to permanently terminate your COSMAN luxury portfolio membership? This action cannot be reversed.")) {
+        showToast("Membership terminated. Farewell.");
+        setTimeout(() => { triggerLogout(); }, 1500);
+      }
+    }
+
+    function triggerLogout() {
+      currentUser = null;
+      const navBtn = document.getElementById('nav-account-btn');
+      navBtn.textContent = 'My Account';
+      navBtn.style.borderColor = '#2A2A2A';
+      navBtn.style.background = 'transparent';
+
+      document.getElementById('forgot-input-state').style.display = 'block';
+      document.getElementById('forgot-success-state').style.display = 'none';
+      document.getElementById('forgot-form').reset();
+      document.getElementById('login-form').reset();
+      document.getElementById('register-form').reset();
+
+      showToast("Access token deleted. Session closed.");
+      switchScreen('login');
+    }
+  </script>
+</body>
+</html>
