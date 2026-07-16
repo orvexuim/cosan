@@ -1,217 +1,162 @@
-import { cartRepository } from '../repositories/cart.repository.js';
-import { couponRepository } from '../repositories/coupon.repository.js';
-import { prisma } from '../config/database.js';
-import { ApiError } from '../utils/ApiError.js';
-import { cache } from '../config/redis.js';
+import { PrismaClient } from '@prisma/client';
+import ApiError from '../utils/ApiError.js';
+import couponService from './coupon.service.js';
 
-const CART_CACHE_TTL = 1800; // 30 minutes in seconds
+const prisma = new PrismaClient();
 
-export const cartService = {
-  /**
-   * Helper to fetch fresh cart, calculate pricing with Morocco VAT (20%), and cache it
-   */
-  async getCartAndRecalculate(userId, couponCode = null) {
-    const cart = await cartRepository.findOrCreateByUserId(userId);
-    
-    let subtotal = 0;
-    const items = cart.items.map((item) => {
-      const itemPrice = item.variant ? (item.product.price + item.variant.priceAdjustment) : item.product.price;
-      const totalItemPrice = itemPrice * item.quantity;
-      subtotal += totalItemPrice;
-      
-      return {
-        id: item.id,
-        productId: item.productId,
-        productVariantId: item.productVariantId,
-        productName: item.product.name,
-        productSlug: item.product.slug,
-        productImage: item.product.mainImage,
-        size: item.variant?.size || null,
-        color: item.variant?.color || null,
-        sku: item.variant?.sku || item.product.sku,
-        quantity: item.quantity,
-        price: itemPrice,
-        totalPrice: totalItemPrice,
-        stock: item.variant?.stock ?? 10, // Default fallback if needed
-      };
-    });
-
-    let discount = 0;
-    let coupon = null;
-
-    if (couponCode) {
-      const validation = await couponRepository.isValid(couponCode, subtotal);
-      if (validation.valid) {
-        coupon = validation.coupon;
-        if (coupon.type === 'PERCENTAGE') {
-          discount = (subtotal * coupon.value) / 100;
-          if (coupon.maxDiscount && discount > coupon.maxDiscount) {
-            discount = coupon.maxDiscount;
+export class CartService {
+  async getCart(userId) {
+    let cart = await prisma.cart.findUnique({
+      where: { userId },
+      include: {
+        items: {
+          include: {
+            product: true,
+            variant: true
           }
-        } else if (coupon.type === 'FIXED_AMOUNT') {
-          discount = coupon.value;
-        }
-        // Discount cannot exceed subtotal
-        if (discount > subtotal) {
-          discount = subtotal;
         }
       }
-    }
-
-    const discountedSubtotal = subtotal - discount;
-    const taxAmount = Number((discountedSubtotal * 0.20).toFixed(2)); // 20% Morocco VAT
-    
-    // Free shipping above $150, otherwise flat $15 shipping
-    const shippingCost = subtotal > 150 || subtotal === 0 ? 0 : 15;
-    const totalAmount = Number((discountedSubtotal + taxAmount + shippingCost).toFixed(2));
-
-    const cartResult = {
-      id: cart.id,
-      userId: cart.userId,
-      items,
-      totals: {
-        subtotal,
-        discount,
-        taxAmount,
-        shippingCost,
-        totalAmount,
-      },
-      coupon: coupon ? { code: coupon.code, value: coupon.value, type: coupon.type } : null,
-    };
-
-    // Cache cart in Redis
-    await cache.set(`cart:${userId}`, cartResult, CART_CACHE_TTL);
-
-    return cartResult;
-  },
-
-  /**
-   * Get Cart
-   */
-  async getCart(userId) {
-    const cached = await cache.get(`cart:${userId}`);
-    if (cached) return cached;
-
-    return this.getCartAndRecalculate(userId);
-  },
-
-  /**
-   * Add Item
-   */
-  async addItem(userId, { productId, productVariantId, quantity }) {
-    // Verify product exists and is active
-    const product = await prisma.product.findUnique({
-      where: { id: productId, isActive: true },
-      include: { variants: true },
     });
 
+    if (!cart) {
+      cart = await prisma.cart.create({
+        data: { userId },
+        include: {
+          items: {
+            include: {
+              product: true,
+              variant: true
+            }
+          }
+        }
+      });
+    }
+
+    return cart;
+  }
+
+  async addItem(userId, productId, variantId, quantity = 1) {
+    const product = await prisma.product.findUnique({ where: { id: productId } });
     if (!product) {
-      throw new ApiError(404, 'Active product not found');
+      throw new ApiError(404, 'Product not found');
     }
 
     let price = product.price;
 
-    if (productVariantId) {
-      const variant = product.variants.find((v) => v.id === productVariantId && v.isActive);
-      if (!variant) {
-        throw new ApiError(404, 'Product variant not found or inactive');
-      }
-      if (variant.stock < quantity) {
-        throw new ApiError(400, `Insufficient stock. Only ${variant.stock} units available.`);
-      }
-      price += variant.priceAdjustment;
-    }
-
-    const cart = await cartRepository.findOrCreateByUserId(userId);
-    await cartRepository.addItem(cart.id, { productId, productVariantId, quantity, price });
-
-    // Invalidate Cache and return fresh recalculated cart
-    await cache.del(`cart:${userId}`);
-    return this.getCartAndRecalculate(userId);
-  },
-
-  /**
-   * Update Quantity
-   */
-  async updateItemQuantity(userId, cartItemId, quantity) {
-    const cart = await cartRepository.findOrCreateByUserId(userId);
-    const cartItem = cart.items.find((item) => item.id === cartItemId);
-
-    if (!cartItem) {
-      throw new ApiError(404, 'Cart item not found');
-    }
-
-    if (cartItem.productVariantId) {
-      const variant = await prisma.productVariant.findUnique({
-        where: { id: cartItem.productVariantId },
+    if (variantId) {
+      const variant = await prisma.productVariant.findFirst({
+        where: { id: variantId, productId }
       });
-      if (!variant || variant.stock < quantity) {
-        throw new ApiError(400, `Insufficient stock. Only ${variant?.stock || 0} units available.`);
+
+      if (!variant) {
+        throw new ApiError(404, 'Product variant not found');
       }
+
+      if (variant.stock < quantity) {
+        throw new ApiError(400, 'Product variant is out of stock / insufficient stock');
+      }
+
+      price = product.price + variant.priceAdjustment;
     }
 
-    await cartRepository.updateItemQuantity(cartItemId, quantity);
+    const cart = await this.getCart(userId);
 
-    // Invalidate Cache and return fresh recalculated cart
-    await cache.del(`cart:${userId}`);
-    return this.getCartAndRecalculate(userId);
-  },
+    const existingItem = cart.items.find(item => 
+      item.productId === productId && item.productVariantId === variantId
+    );
 
-  /**
-   * Remove Item
-   */
-  async removeItem(userId, cartItemId) {
-    const cart = await cartRepository.findOrCreateByUserId(userId);
-    const cartItem = cart.items.find((item) => item.id === cartItemId);
+    if (existingItem) {
+      await prisma.cartItem.update({
+        where: { id: existingItem.id },
+        data: { quantity: existingItem.quantity + quantity }
+      });
+    } else {
+      await prisma.cartItem.create({
+        data: {
+          cartId: cart.id,
+          productId,
+          productVariantId: variantId,
+          quantity,
+          price
+        }
+      });
+    }
+
+    return this.getCart(userId);
+  }
+
+  async updateItem(userId, cartItemId, quantity) {
+    const cartItem = await prisma.cartItem.findUnique({
+      where: { id: cartItemId },
+      include: { variant: true }
+    });
 
     if (!cartItem) {
       throw new ApiError(404, 'Cart item not found');
     }
 
-    await cartRepository.removeItem(cartItemId);
+    if (cartItem.variant && cartItem.variant.stock < quantity) {
+      throw new ApiError(400, 'Insufficient stock available');
+    }
 
-    // Invalidate Cache
-    await cache.del(`cart:${userId}`);
-    return this.getCartAndRecalculate(userId);
-  },
+    await prisma.cartItem.update({
+      where: { id: cartItemId },
+      data: { quantity }
+    });
 
-  /**
-   * Clear Cart
-   */
+    return this.getCart(userId);
+  }
+
+  async removeItem(userId, cartItemId) {
+    const cartItem = await prisma.cartItem.findUnique({ where: { id: cartItemId } });
+    if (!cartItem) {
+      throw new ApiError(404, 'Cart item not found');
+    }
+
+    await prisma.cartItem.delete({ where: { id: cartItemId } });
+
+    return this.getCart(userId);
+  }
+
   async clearCart(userId) {
-    const cart = await cartRepository.findOrCreateByUserId(userId);
-    await cartRepository.clearCart(cart.id);
+    const cart = await this.getCart(userId);
 
-    // Invalidate Cache
-    await cache.del(`cart:${userId}`);
-    return this.getCartAndRecalculate(userId);
-  },
+    await prisma.cartItem.deleteMany({
+      where: { cartId: cart.id }
+    });
 
-  /**
-   * Apply Coupon
-   */
+    return this.getCart(userId);
+  }
+
   async applyCoupon(userId, couponCode) {
-    const cart = await cartRepository.findOrCreateByUserId(userId);
-    if (cart.items.length === 0) {
+    const cart = await this.getCart(userId);
+    if (!cart.items.length) {
       throw new ApiError(400, 'Cannot apply coupon to an empty cart');
     }
 
-    const validation = await couponRepository.isValid(couponCode, 0); // basic existence check
-    if (!validation.valid) {
-      throw new ApiError(400, validation.message);
+    const subtotal = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    const coupon = await couponService.validateCoupon(couponCode, subtotal);
+
+    let discount = 0;
+    if (coupon.type === 'PERCENTAGE') {
+      discount = (subtotal * coupon.value) / 100;
+      if (coupon.maxDiscount) {
+        discount = Math.min(discount, coupon.maxDiscount);
+      }
+    } else if (coupon.type === 'FIXED_AMOUNT') {
+      discount = coupon.value;
     }
 
-    // This will calculate values with the applied coupon code
-    return this.getCartAndRecalculate(userId, couponCode);
-  },
+    discount = Math.min(discount, subtotal);
 
-  /**
-   * Calculate totals explicitly
-   */
-  async getCartTotals(userId, couponCode = null) {
-    const cart = await this.getCartAndRecalculate(userId, couponCode);
-    return cart.totals;
-  },
-};
+    return {
+      coupon,
+      subtotal,
+      discount,
+      total: subtotal - discount
+    };
+  }
+}
 
-export default cartService;
+export default new CartService();
