@@ -2,8 +2,57 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+  <!-- ═══ SEO & PERFORMANCE ═══ -->
+  <meta name="description" content="The Classique Stiletto: full-grain calfskin leather, 9cm tapered heel, gold hardware. The pinnacle of COSMAN feminine luxury. From 890 MAD."/>
+  <meta name="keywords" content="luxury shoes Morocco, COSMAN footwear, chaussures luxe Maroc, premium heels, designer shoes Casablanca, maroquinerie luxe"/>
+  <meta name="author" content="COSMAN"/>
+  <meta name="robots" content="index, follow, max-image-preview:large"/>
+  <link rel="canonical" href="https://orvexuim.github.io/cosan/product.html"/>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="COSMAN"/>
+  <meta property="og:title" content="Classique Stiletto — Full-Grain Leather Heels | COSMAN"/>
+  <meta property="og:description" content="The Classique Stiletto: full-grain calfskin leather, 9cm tapered heel, gold hardware. The pinnacle of COSMAN feminine luxury. From 890 MAD."/>
+  <meta property="og:url" content="https://orvexuim.github.io/cosan/product.html"/>
+  <meta property="og:image" content="https://orvexuim.github.io/cosan/og-product.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:locale" content="en_US"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Classique Stiletto — Full-Grain Leather Heels | COSMAN"/>
+  <meta name="twitter:description" content="The Classique Stiletto: full-grain calfskin leather, 9cm tapered heel, gold hardware. The pinnacle of COSMAN feminine luxury. From 890 MAD."/>
+  <meta name="twitter:image" content="https://orvexuim.github.io/cosan/og-product.jpg"/>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#C9A84C"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="COSMAN"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+
+  <!-- Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com"/>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {{"@context":"https://schema.org","@type":"Product","name":"Classique Stiletto","description":"Full-grain calfskin leather stiletto with gold hardware","brand":{"@type":"Brand","name":"COSMAN"},"offers":{"@type":"Offer","price":"890","priceCurrency":"MAD","availability":"https://schema.org/InStock"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"48"}}}
+  </script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if('serviceWorker' in navigator){
+      window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+    }
+  </script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Classique Stiletto — COSMAN Luxury Footwear</title>
+<title>Classique Stiletto — Full-Grain Leather Heels | COSMAN</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -343,12 +392,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;padding:0 40px;
 /* RESPONSIVE */
 @media(max-width:1024px){.product-page{grid-template-columns:1fr;gap:40px;}.gallery{position:static;}.related-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:768px){nav{padding:0 20px;}.nav-links{display:none;}.product-page{padding:24px 20px;}.reviews-section,.related-section{padding:0 20px 60px;}.reviews-overview{grid-template-columns:1fr;gap:24px;}.reviews-grid{grid-template-columns:1fr;}.sticky-bar{display:flex;}}
+
+  /* ═══ ACCESSIBILITY & PERFORMANCE ═══ */
+  *:focus-visible{outline:2px solid #C9A84C;outline-offset:3px;border-radius:2px;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}}
+  img{max-width:100%;height:auto;display:block;}
+  button,a,[role=button]{min-height:44px;min-width:44px;}
+  @media(max-width:480px){
+    nav ul{display:none!important;}
+    body{font-size:15px;}
+  }
+  html{text-size-adjust:100%;-webkit-text-size-adjust:100%;}
 </style>
 </head>
 <body>
+<a href="#main-content" class="sr-only" style="position:absolute;top:0;left:0;z-index:9999;padding:8px 16px;background:#C9A84C;color:#0A0A0A;font-weight:700;border-radius:0 0 8px 0;">Skip to content</a>
+
 
 <!-- NAV -->
-<nav>
+<nav aria-label="Main navigation">
   <a href="index.html" class="nav-logo">
     <div class="nav-badge">CM</div>
     <span class="nav-wordmark">COSMAN</span>

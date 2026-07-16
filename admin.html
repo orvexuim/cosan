@@ -1,0 +1,2826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMAN Admin Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #0A0A0A;
+            --black-soft: #111111;
+            --black-card: #161616;
+            --black-border: #2A2A2A;
+            --gold: #C9A84C;
+            --gold-light: #E2C97E;
+            --gold-glow: rgba(201, 168, 76, 0.12);
+            --cream: #F5F0E8;
+            --text-muted: #888888;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --danger: #EF4444;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) var(--black-soft);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--black-soft);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--black-border);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--black);
+            color: var(--cream);
+            overflow-x: hidden;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR STYLE */
+        aside {
+            width: 240px;
+            background-color: var(--black-soft);
+            border-right: 1px solid var(--black-border);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .sidebar-brand {
+            padding: 30px 24px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gold);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            letter-spacing: 3px;
+            font-weight: 700;
+            color: var(--cream);
+        }
+
+        .admin-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            opacity: 0.8;
+            padding-left: 2px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-grow: 1;
+        }
+
+        .sidebar-nav li a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 24px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .sidebar-nav li a svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            transition: var(--transition);
+        }
+
+        .sidebar-nav li a:hover {
+            color: var(--cream);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .sidebar-nav li.active a {
+            color: var(--gold);
+            background-color: var(--gold-glow);
+            border-left-color: var(--gold);
+        }
+
+        .sidebar-user {
+            padding: 20px 24px;
+            border-top: 1px solid var(--black-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gold);
+            color: var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            border: 1px solid var(--gold-light);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--cream);
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 240px;
+            height: 70px;
+            background-color: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--black-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 90;
+            transition: var(--transition);
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-container input {
+            background-color: var(--black-soft);
+            border: 1px solid var(--black-border);
+            border-radius: 4px;
+            padding: 10px 16px 10px 40px;
+            color: var(--cream);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            width: 240px;
+            transition: var(--transition);
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .search-container svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-muted);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            color: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .notification-btn:hover {
+            background-color: var(--black-border);
+        }
+
+        .notification-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--gold);
+            box-shadow: 0 0 8px var(--gold);
+        }
+
+        /* MAIN CONTENT */
+        main {
+            margin-left: 240px;
+            margin-top: 70px;
+            padding: 40px;
+            width: calc(100% - 240px);
+            min-height: calc(100vh - 70px);
+            transition: var(--transition);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* GRID / CARDS LAYOUT */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background-color: var(--black-card);
+            border: 1px solid var(--black-border);
+            border-radius: 8px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 20px var(--gold-glow);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            height: 24px;
+        }
+
+        .stat-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .stat-icon {
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin-bottom: 8px;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+
+        /* DASHBOARD CHARTS & TABLES COMBINATION */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card-panel {
+            background-color: var(--black-card);
+            border: 1px solid var(--black-border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .card-panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* PURE CSS/JS BAR CHART */
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding-top: 20px;
+            position: relative;
+            border-left: 1px solid var(--black-border);
+            border-bottom: 1px solid var(--black-border);
+            margin-left: 45px;
+        }
+
+        .chart-y-axis {
+            position: absolute;
+            left: -45px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 10px;
+            text-align: right;
+            width: 35px;
+            padding-bottom: 12px;
+        }
+
+        .chart-bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            height: 100%;
+            justify-content: flex-end;
+            position: relative;
+        }
+
+        .chart-bar {
+            width: 40%;
+            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 0; /* Dynamic animated start */
+            cursor: pointer;
+        }
+
+        .chart-bar:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 15px var(--gold);
+        }
+
+        .chart-bar-tooltip {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            background-color: var(--black-soft);
+            border: 1px solid var(--gold);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            color: var(--cream);
+            z-index: 5;
+        }
+
+        .chart-bar:hover .chart-bar-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .chart-label {
+            margin-top: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* TABLES */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--black-border);
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--black-border);
+            color: var(--cream);
+            vertical-align: middle;
+        }
+
+        tr {
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.01);
+            box-shadow: inset 3px 0 0 var(--gold), 0 0 15px var(--gold-glow);
+        }
+
+        /* BADGES */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-success { background-color: rgba(16, 185, 129, 0.12); color: var(--success); }
+        .badge-warning { background-color: rgba(245, 158, 11, 0.12); color: var(--warning); }
+        .badge-info { background-color: rgba(59, 130, 246, 0.12); color: var(--info); }
+        .badge-danger { background-color: rgba(239, 68, 68, 0.12); color: var(--danger); }
+        .badge-regular { background-color: rgba(255, 255, 255, 0.08); color: var(--text-muted); }
+        .badge-gold { background-color: var(--gold-glow); color: var(--gold); border: 1px solid rgba(201, 168, 76, 0.3); }
+        .badge-vip { background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2)); color: #D946EF; border: 1px solid rgba(217, 70, 239, 0.3); }
+
+        /* ACTION BUTTONS */
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .btn-icon:hover {
+            color: var(--gold);
+            background-color: var(--black-border);
+        }
+
+        .btn-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* TOP PRODUCTS / RANK CARDS */
+        .top-products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .product-rank-card {
+            background-color: var(--black-soft);
+            border: 1px solid var(--black-border);
+            border-radius: 6px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .product-rank-card:hover {
+            border-color: var(--gold);
+        }
+
+        .rank-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gold);
+            opacity: 0.5;
+            width: 24px;
+        }
+
+        .rank-emoji-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 4px;
+            background-color: var(--black-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .rank-details {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .rank-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--cream);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rank-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* TOOLBARS & BUTTONS */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-left, .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-gold {
+            background-color: var(--gold);
+            color: var(--black);
+            border: 1px solid var(--gold-light);
+            padding: 10px 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-gold:hover {
+            background-color: var(--gold-light);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .btn-outline {
+            background: none;
+            border: 1px solid var(--black-border);
+            color: var(--cream);
+            padding: 10px 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        select, input[type="text"], input[type="number"], input[type="date"], textarea {
+            background-color: var(--black-soft);
+            border: 1px solid var(--black-border);
+            color: var(--cream);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 4px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        select:focus, input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        /* FILTER TABS */
+        .filter-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--black-border);
+            margin-bottom: 24px;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 18px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            color: var(--cream);
+        }
+
+        .tab-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        /* PAGINATION */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--black-border);
+        }
+
+        .pagination-info {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .pagination-pages {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-link {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            border: 1px solid var(--black-border);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .page-link:hover, .page-link.active {
+            border-color: var(--gold);
+            color: var(--gold);
+            background-color: var(--gold-glow);
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background-color: var(--black-card);
+            border: 1px solid var(--black-border);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(30px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--black-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gold-light);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 24px;
+            transition: var(--transition);
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--gold);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--black-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* FORMS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-grid-single {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Checkbox lists */
+        .variants-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .checkbox-btn {
+            position: relative;
+        }
+
+        .checkbox-btn input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkbox-btn label {
+            display: block;
+            border: 1px solid var(--black-border);
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: center;
+            background-color: var(--black-soft);
+            color: var(--cream);
+            transition: var(--transition);
+        }
+
+        .checkbox-btn input[type="checkbox"]:checked + label {
+            border-color: var(--gold);
+            background-color: var(--gold-glow);
+            color: var(--gold-light);
+        }
+
+        /* Toggle switch */
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .toggle-switch input {
+            display: none;
+        }
+
+        .toggle-slider {
+            width: 44px;
+            height: 22px;
+            background-color: var(--black-border);
+            border-radius: 20px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            top: 3px;
+            left: 3px;
+            transition: var(--transition);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--gold-glow);
+            border: 1px solid var(--gold);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+            background-color: var(--gold);
+        }
+
+        /* DETAIL MODAL DESIGNS */
+        .order-detail-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 24px;
+        }
+
+        .timeline {
+            margin-top: 15px;
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 5px;
+            bottom: 5px;
+            width: 2px;
+            background-color: var(--black-border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--black-border);
+            border: 2px solid var(--black-card);
+        }
+
+        .timeline-item.completed::before {
+            background-color: var(--gold);
+            box-shadow: 0 0 8px var(--gold);
+        }
+
+        .timeline-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--cream);
+        }
+
+        .timeline-date {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* CUSTOMER PROFILE CARD */
+        .profile-card {
+            background-color: var(--black-soft);
+            border: 1px solid var(--black-border);
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: var(--gold-glow);
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-family: 'Playfair Display', serif;
+            color: var(--gold-light);
+        }
+
+        /* ANALYTICS CHARTS & GRID */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 2fr 1.2fr;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .donut-chart-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Pie/Donut Chart via conic-gradient */
+        .pie-chart {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--gold) 0% 48%,
+                var(--gold-light) 48% 75%,
+                #8B5CF6 75% 90%,
+                #EC4899 90% 100%
+            );
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pie-chart-inner {
+            width: 110px;
+            height: 110px;
+            background-color: var(--black-card);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pie-center-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gold-light);
+        }
+
+        .pie-center-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* PROGRESS BARS */
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--black-border);
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--gold);
+            border-radius: 3px;
+            transition: width 1s ease-in-out;
+        }
+
+        /* TRAFFIC SOURCES */
+        .traffic-source-row {
+            margin-bottom: 16px;
+        }
+
+        .traffic-source-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        /* SPARKLINE */
+        .sparkline-svg {
+            width: 80px;
+            height: 30px;
+            stroke: var(--gold);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* FLOATING QUICK ACTIONS */
+        .quick-actions-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 150;
+        }
+
+        .quick-actions-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--gold);
+            color: var(--black);
+            border: 1px solid var(--gold-light);
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .quick-actions-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+            transition: var(--transition);
+        }
+
+        .quick-actions-container.active .quick-actions-btn {
+            transform: rotate(135deg);
+            background-color: var(--black-card);
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .quick-actions-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(15px);
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .quick-actions-container.active .quick-actions-menu {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .quick-action-item {
+            background-color: var(--black-card);
+            border: 1px solid var(--black-border);
+            color: var(--cream);
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transition: var(--transition);
+        }
+
+        .quick-action-item:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .quick-action-item svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* TOAST SYSTEM */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: var(--black-card);
+            border: 1px solid var(--gold);
+            color: var(--cream);
+            padding: 14px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 20px var(--gold-glow);
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 900px) {
+            aside {
+                width: 70px;
+            }
+            .sidebar-brand .logo-text, .sidebar-brand .admin-label, .sidebar-nav span, .sidebar-user .user-info {
+                display: none;
+            }
+            .sidebar-brand {
+                align-items: center;
+                padding: 20px 0;
+            }
+            .sidebar-nav li a {
+                justify-content: center;
+                padding: 14px 0;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            .sidebar-nav li.active a {
+                border-bottom-color: var(--gold);
+            }
+            .sidebar-user {
+                justify-content: center;
+                padding: 15px 0;
+            }
+            header {
+                left: 70px;
+            }
+            main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 24px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .dashboard-layout, .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            aside {
+                width: 100%;
+                height: 60px;
+                top: auto;
+                bottom: 0;
+                border-right: none;
+                border-top: 1px solid var(--black-border);
+                flex-direction: row;
+            }
+            .sidebar-brand, .sidebar-user {
+                display: none;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                justify-content: space-around;
+                width: 100%;
+                padding: 0;
+            }
+            .sidebar-nav li {
+                flex-grow: 1;
+            }
+            .sidebar-nav li a {
+                height: 100%;
+                padding: 0;
+            }
+            header {
+                left: 0;
+                padding: 0 20px;
+            }
+            main {
+                margin-left: 0;
+                margin-top: 70px;
+                margin-bottom: 60px;
+                width: 100%;
+                padding: 16px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toolbar-left, .toolbar-right {
+                width: 100%;
+            }
+            .toolbar input, .toolbar select, .toolbar button {
+                width: 100%;
+            }
+            .top-products-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .order-detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo-container">
+                <div class="logo-badge">CM</div>
+                <div class="logo-text">COSMAN</div>
+            </div>
+            <div class="admin-label">Admin Portal</div>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="active" data-section="dashboard">
+                <a onclick="switchSection('dashboard')">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li data-section="products">
+                <a onclick="switchSection('products')">
+                    <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    <span>Products</span>
+                </a>
+            </li>
+            <li data-section="orders">
+                <a onclick="switchSection('orders')">
+                    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span>Orders</span>
+                </a>
+            </li>
+            <li data-section="customers">
+                <a onclick="switchSection('customers')">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <span>Customers</span>
+                </a>
+            </li>
+            <li data-section="analytics">
+                <a onclick="switchSection('analytics')">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Analytics</span>
+                </a>
+            </li>
+            <li data-section="settings">
+                <a onclick="switchSection('settings')">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a onclick="showToast('Logging out... Redirecting to splash.')">
+                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-user">
+            <div class="avatar">A</div>
+            <div class="user-info">
+                <div class="user-name">Admin</div>
+                <div class="user-role">Store Manager</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-title" id="page-title">Dashboard</div>
+        <div class="header-actions">
+            <div class="search-container">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" placeholder="Search resources..." id="global-search" onkeyup="globalSearchHandler(this.value)">
+            </div>
+            <button class="notification-btn" onclick="showToast('You have 3 new notifications')">
+                <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <div class="notification-badge"></div>
+            </button>
+            <div class="avatar" style="width:34px; height:34px; font-size:12px;">AD</div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <!-- ================= SECTION 1: DASHBOARD ================= -->
+        <section id="section-dashboard" class="section active">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Total Revenue</span>
+                        <span class="stat-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
+                    </div>
+                    <div class="stat-value">1,247,800 MAD</div>
+                    <div class="stat-trend trend-up">
+                        ▲ 18% <span style="color: var(--text-muted)">vs last month</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Total Orders</span>
+                        <span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
+                    </div>
+                    <div class="stat-value">842</div>
+                    <div class="stat-trend trend-up">
+                        ▲ 12% <span style="color: var(--text-muted)">vs last month</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Active Customers</span>
+                        <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></span>
+                    </div>
+                    <div class="stat-value">3,241</div>
+                    <div class="stat-trend trend-up">
+                        ▲ 8% <span style="color: var(--text-muted)">vs last month</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Avg Order Value</span>
+                        <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
+                    </div>
+                    <div class="stat-value">1,482 MAD</div>
+                    <div class="stat-trend trend-up">
+                        ▲ 5% <span style="color: var(--text-muted)">vs last month</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Layout (Chart & Top Products) -->
+            <div class="dashboard-layout">
+                <div class="card-panel">
+                    <div class="card-panel-title">Revenue Overview (Jan - Jul 2026)</div>
+                    <div class="chart-container" id="revenue-chart">
+                        <div class="chart-y-axis">
+                            <div>300k</div>
+                            <div>200k</div>
+                            <div>100k</div>
+                            <div>0</div>
+                        </div>
+                        <!-- Generated dynamically or customized via JS -->
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 45%" data-value="135,000 MAD">
+                                <div class="chart-bar-tooltip">135k MAD</div>
+                            </div>
+                            <div class="chart-label">Jan</div>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 55%" data-value="165,000 MAD">
+                                <div class="chart-bar-tooltip">165k MAD</div>
+                            </div>
+                            <div class="chart-label">Feb</div>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 50%" data-value="150,000 MAD">
+                                <div class="chart-bar-tooltip">150k MAD</div>
+                            </div>
+                            <div class="chart-label">Mar</div>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 70%" data-value="210,000 MAD">
+                                <div class="chart-bar-tooltip">210k MAD</div>
+                            </div>
+                            <div class="chart-label">Apr</div>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 65%" data-value="195,000 MAD">
+                                <div class="chart-bar-tooltip">195k MAD</div>
+                            </div>
+                            <div class="chart-label">May</div>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 85%" data-value="255,000 MAD">
+                                <div class="chart-bar-tooltip">255k MAD</div>
+                            </div>
+                            <div class="chart-label">Jun</div>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 95%" data-value="285,000 MAD">
+                                <div class="chart-bar-tooltip">285k MAD</div>
+                            </div>
+                            <div class="chart-label">Jul</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-panel">
+                    <div class="card-panel-title">Top Products</div>
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        <div class="product-rank-card">
+                            <div class="rank-number">1</div>
+                            <div class="rank-emoji-box">👠</div>
+                            <div class="rank-details">
+                                <div class="rank-name">Aurelia Stiletto</div>
+                                <div class="rank-meta">145 sold • 214,900 MAD</div>
+                            </div>
+                        </div>
+                        <div class="product-rank-card">
+                            <div class="rank-number">2</div>
+                            <div class="rank-emoji-box">🥾</div>
+                            <div class="rank-details">
+                                <div class="rank-name">Imperia Leather Boot</div>
+                                <div class="rank-meta">98 sold • 176,400 MAD</div>
+                            </div>
+                        </div>
+                        <div class="product-rank-card">
+                            <div class="rank-number">3</div>
+                            <div class="rank-emoji-box">👞</div>
+                            <div class="rank-details">
+                                <div class="rank-name">Marrakech Loafer</div>
+                                <div class="rank-meta">84 sold • 117,600 MAD</div>
+                            </div>
+                        </div>
+                        <div class="product-rank-card">
+                            <div class="rank-number">4</div>
+                            <div class="rank-emoji-box">👜</div>
+                            <div class="rank-details">
+                                <div class="rank-name">Verona Handbag</div>
+                                <div class="rank-meta">62 sold • 111,600 MAD</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Panel -->
+            <div class="card-panel">
+                <div class="card-panel-title">Recent Orders</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-orders-table">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 2: PRODUCTS ================= -->
+        <section id="section-products" class="section">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <input type="text" placeholder="Search products..." id="product-search" oninput="filterProducts()">
+                    <select id="product-category" onchange="filterProducts()">
+                        <option value="All">All Categories</option>
+                        <option value="Heels">Heels</option>
+                        <option value="Boots">Boots</option>
+                        <option value="Loafers">Loafers</option>
+                        <option value="Bags">Bags</option>
+                        <option value="Sandals">Sandals</option>
+                    </select>
+                    <select id="product-sort" onchange="filterProducts()">
+                        <option value="name">Sort by Name</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="stock">Stock Quantity</option>
+                    </select>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn-gold" onclick="openProductModal()">
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add Product
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body">
+                            <!-- Populated Dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <div class="pagination-info" id="product-pagination-info">Showing 1 to 10 of 18 products</div>
+                    <div class="pagination-pages">
+                        <span class="page-link" onclick="showToast('First page')">◀</span>
+                        <span class="page-link active">1</span>
+                        <span class="page-link" onclick="showToast('Page 2')">2</span>
+                        <span class="page-link" onclick="showToast('Last page')">▶</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 3: ORDERS ================= -->
+        <section id="section-orders" class="section">
+            <div class="stats-grid" style="margin-bottom: 24px;">
+                <div class="stat-card" style="padding: 18px;">
+                    <div class="stat-header" style="margin-bottom: 4px;">
+                        <span class="stat-title">Pending</span>
+                        <span class="badge badge-warning" style="padding: 2px 6px;">Hold</span>
+                    </div>
+                    <div class="stat-value" style="font-size: 22px;">23 Orders</div>
+                </div>
+                <div class="stat-card" style="padding: 18px;">
+                    <div class="stat-header" style="margin-bottom: 4px;">
+                        <span class="stat-title">Processing</span>
+                        <span class="badge badge-info" style="padding: 2px 6px;">Prep</span>
+                    </div>
+                    <div class="stat-value" style="font-size: 22px;">45 Orders</div>
+                </div>
+                <div class="stat-card" style="padding: 18px;">
+                    <div class="stat-header" style="margin-bottom: 4px;">
+                        <span class="stat-title">Shipped</span>
+                        <span class="badge badge-success" style="padding: 2px 6px; background-color: rgba(59,130,246,0.12); color: var(--info);">Transit</span>
+                    </div>
+                    <div class="stat-value" style="font-size: 22px;">128 Orders</div>
+                </div>
+                <div class="stat-card" style="padding: 18px;">
+                    <div class="stat-header" style="margin-bottom: 4px;">
+                        <span class="stat-title">Delivered</span>
+                        <span class="badge badge-success" style="padding: 2px 6px;">Done</span>
+                    </div>
+                    <div class="stat-value" style="font-size: 22px;">646 Orders</div>
+                </div>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="tab-btn active" onclick="filterOrdersByTab('All', this)">All</button>
+                <button class="tab-btn" onclick="filterOrdersByTab('Pending', this)">Pending</button>
+                <button class="tab-btn" onclick="filterOrdersByTab('Processing', this)">Processing</button>
+                <button class="tab-btn" onclick="filterOrdersByTab('Shipped', this)">Shipped</button>
+                <button class="tab-btn" onclick="filterOrdersByTab('Delivered', this)">Delivered</button>
+                <button class="tab-btn" onclick="filterOrdersByTab('Cancelled', this)">Cancelled</button>
+            </div>
+
+            <div class="card-panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer Name</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body">
+                            <!-- Populated Dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <div class="pagination-info" id="order-pagination-info">Showing 1 to 8 of 8 orders</div>
+                    <div class="pagination-pages">
+                        <span class="page-link">◀</span>
+                        <span class="page-link active">1</span>
+                        <span class="page-link">▶</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 4: CUSTOMERS ================= -->
+        <section id="section-customers" class="section">
+            <div class="stats-grid" style="margin-bottom: 24px;">
+                <div class="stat-card" style="padding: 18px;">
+                    <div class="stat-header" style="margin-bottom: 4px;"><span class="stat-title">Total Customers</span></div>
+                    <div class="stat-value" style="font-size: 22px;">3,241</div>
+                </div>
+                <div class="stat-card" style="padding: 18px;">
+                    <div class="stat-header" style="margin-bottom: 4px;"><span class="stat-title">New This Month</span></div>
+                    <div class="stat-value" style="font-size: 22px;">+284</div>
+                </div>
+                <div class="stat-card" style="padding: 18px;">
+                    <div class="stat-header" style="margin-bottom: 4px;"><span class="stat-title">VIP Members</span></div>
+                    <div class="stat-value" style="font-size: 22px;">156</div>
+                </div>
+                <div class="stat-card" style="padding: 18px;">
+                    <div class="stat-header" style="margin-bottom: 4px;"><span class="stat-title">Avg Lifetime Value</span></div>
+                    <div class="stat-value" style="font-size: 22px;">4,850 MAD</div>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <input type="text" placeholder="Search customers..." id="customer-search" oninput="filterCustomers()">
+                    <select id="customer-tier" onchange="filterCustomers()">
+                        <option value="All">All Tiers</option>
+                        <option value="VIP">VIP</option>
+                        <option value="Gold">Gold</option>
+                        <option value="Regular">Regular</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Country</th>
+                                <th>Orders</th>
+                                <th>Total Spent</th>
+                                <th>Tier</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customers-table-body">
+                            <!-- Populated Dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <div class="pagination-info" id="customer-pagination-info">Showing 1 to 8 of 8 customers</div>
+                    <div class="pagination-pages">
+                        <span class="page-link">◀</span>
+                        <span class="page-link active">1</span>
+                        <span class="page-link">▶</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 5: ANALYTICS ================= -->
+        <section id="section-analytics" class="section">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <input type="date" value="2026-07-01">
+                    <span style="color: var(--text-muted)">to</span>
+                    <input type="date" value="2026-07-16">
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn-outline" onclick="showToast('Exporting Analytics PDF...')">Download PDF Report</button>
+                </div>
+            </div>
+
+            <!-- KPI Tiles -->
+            <div class="stats-grid" style="grid-template-columns: repeat(6, 1fr); margin-bottom: 24px; gap: 14px;">
+                <div class="stat-card" style="padding: 14px;">
+                    <div class="stat-title" style="font-size: 11px;">Revenue</div>
+                    <div class="stat-value" style="font-size: 18px; margin-top: 4px;">1,247.8k</div>
+                </div>
+                <div class="stat-card" style="padding: 14px;">
+                    <div class="stat-title" style="font-size: 11px;">Orders</div>
+                    <div class="stat-value" style="font-size: 18px; margin-top: 4px;">842</div>
+                </div>
+                <div class="stat-card" style="padding: 14px;">
+                    <div class="stat-title" style="font-size: 11px;">Customers</div>
+                    <div class="stat-value" style="font-size: 18px; margin-top: 4px;">3,241</div>
+                </div>
+                <div class="stat-card" style="padding: 14px;">
+                    <div class="stat-title" style="font-size: 11px;">Conv. Rate</div>
+                    <div class="stat-value" style="font-size: 18px; margin-top: 4px;">3.4%</div>
+                </div>
+                <div class="stat-card" style="padding: 14px;">
+                    <div class="stat-title" style="font-size: 11px;">Avg Basket</div>
+                    <div class="stat-value" style="font-size: 18px; margin-top: 4px;">1,482 MAD</div>
+                </div>
+                <div class="stat-card" style="padding: 14px;">
+                    <div class="stat-title" style="font-size: 11px;">Return Rate</div>
+                    <div class="stat-value" style="font-size: 18px; margin-top: 4px;">1.8%</div>
+                </div>
+            </div>
+
+            <!-- Analytics Layout -->
+            <div class="analytics-grid">
+                <!-- Daily Revenue -->
+                <div class="card-panel">
+                    <div class="card-panel-title">Daily Revenue (Last 30 Days)</div>
+                    <div class="chart-container" id="daily-revenue-chart" style="height: 220px;">
+                        <!-- Sparkline-like bars populated dynamically in JS -->
+                        <div class="chart-y-axis">
+                            <div>8k</div>
+                            <div>4k</div>
+                            <div>800</div>
+                        </div>
+                        <!-- Daily bars will be rendered via JS here -->
+                    </div>
+                </div>
+
+                <!-- Top Categories Pie Chart -->
+                <div class="card-panel">
+                    <div class="card-panel-title">Top Categories</div>
+                    <div class="donut-chart-box">
+                        <div class="pie-chart">
+                            <div class="pie-chart-inner">
+                                <div class="pie-center-value">48%</div>
+                                <div class="pie-center-label">Women Heels</div>
+                            </div>
+                        </div>
+                        <div class="legend-grid">
+                            <div class="legend-item"><div class="legend-dot" style="background-color: var(--gold)"></div> Women (48%)</div>
+                            <div class="legend-item"><div class="legend-dot" style="background-color: var(--gold-light)"></div> Men (27%)</div>
+                            <div class="legend-item"><div class="legend-dot" style="background-color: #8B5CF6"></div> Bags (15%)</div>
+                            <div class="legend-item"><div class="legend-dot" style="background-color: #EC4899"></div> Sandals (10%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Breakdown (Cities & Traffic Sources) -->
+            <div class="analytics-grid" style="grid-template-columns: 1fr 1fr;">
+                <!-- City Breakdown -->
+                <div class="card-panel">
+                    <div class="card-panel-title">Geographic Breakdown</div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>City</th>
+                                    <th>Orders</th>
+                                    <th>Revenue</th>
+                                    <th>Market Share</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Casablanca</td>
+                                    <td>342</td>
+                                    <td>506,840 MAD</td>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <span>40%</span>
+                                            <div class="progress-bar-container"><div class="progress-bar" style="width: 40%"></div></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Rabat</td>
+                                    <td>189</td>
+                                    <td>280,100 MAD</td>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <span>22%</span>
+                                            <div class="progress-bar-container"><div class="progress-bar" style="width: 22%"></div></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Marrakech</td>
+                                    <td>120</td>
+                                    <td>177,840 MAD</td>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <span>14%</span>
+                                            <div class="progress-bar-container"><div class="progress-bar" style="width: 14%"></div></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Agadir</td>
+                                    <td>76</td>
+                                    <td>112,630 MAD</td>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <span>9%</span>
+                                            <div class="progress-bar-container"><div class="progress-bar" style="width: 9%"></div></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Fès</td>
+                                    <td>65</td>
+                                    <td>96,330 MAD</td>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <span>8%</span>
+                                            <div class="progress-bar-container"><div class="progress-bar" style="width: 8%"></div></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Traffic Sources -->
+                <div class="card-panel">
+                    <div class="card-panel-title">Traffic Sources</div>
+                    <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; padding-bottom: 24px;">
+                        <div class="traffic-source-row">
+                            <div class="traffic-source-header"><span>Direct Storefront</span><span>42%</span></div>
+                            <div class="progress-bar-container"><div class="progress-bar" style="width: 42%"></div></div>
+                        </div>
+                        <div class="traffic-source-row">
+                            <div class="traffic-source-header"><span>Social Media (Instagram)</span><span>28%</span></div>
+                            <div class="progress-bar-container"><div class="progress-bar" style="width: 28%; background-color: var(--gold-light);"></div></div>
+                        </div>
+                        <div class="traffic-source-row">
+                            <div class="traffic-source-header"><span>Google Search SEO</span><span>15%</span></div>
+                            <div class="progress-bar-container"><div class="progress-bar" style="width: 15%; background-color: #8B5CF6;"></div></div>
+                        </div>
+                        <div class="traffic-source-row">
+                            <div class="traffic-source-header"><span>WhatsApp Commerce</span><span>10%</span></div>
+                            <div class="progress-bar-container"><div class="progress-bar" style="width: 10%; background-color: #EC4899;"></div></div>
+                        </div>
+                        <div class="traffic-source-row">
+                            <div class="traffic-source-header"><span>Referrals / Influencers</span><span>5%</span></div>
+                            <div class="progress-bar-container"><div class="progress-bar" style="width: 5%; background-color: var(--text-muted);"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Sellers Table with Trend Sparkline -->
+            <div class="card-panel">
+                <div class="card-panel-title">Best Selling Products Trend</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Product Name</th>
+                                <th>Units Sold</th>
+                                <th>Revenue</th>
+                                <th>Trend Sparkline</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#1</td>
+                                <td>Aurelia Stiletto</td>
+                                <td>145</td>
+                                <td>214,900 MAD</td>
+                                <td>
+                                    <svg class="sparkline-svg"><path d="M 0 25 L 15 20 L 30 22 L 45 12 L 60 5 L 80 0" /></svg>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#2</td>
+                                <td>Imperia Leather Boot</td>
+                                <td>98</td>
+                                <td>176,400 MAD</td>
+                                <td>
+                                    <svg class="sparkline-svg" style="stroke: var(--gold-light);"><path d="M 0 10 L 15 15 L 30 5 L 45 18 L 60 8 L 80 2" /></svg>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#3</td>
+                                <td>Marrakech Loafer</td>
+                                <td>84</td>
+                                <td>117,600 MAD</td>
+                                <td>
+                                    <svg class="sparkline-svg"><path d="M 0 28 L 15 26 L 30 18 L 45 15 L 60 12 L 80 5" /></svg>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 6: SETTINGS ================= -->
+        <section id="section-settings" class="section">
+            <div class="card-panel" style="max-width: 800px; margin: 0 auto;">
+                <div class="card-panel-title">Store Preferences</div>
+                <div class="form-grid-single">
+                    <div class="form-group">
+                        <label>Store Name</label>
+                        <input type="text" value="COSMAN Casablanca">
+                    </div>
+                    <div class="form-group">
+                        <label>Support Email</label>
+                        <input type="text" value="concierge@cosman.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Currency Symbol</label>
+                        <select>
+                            <option>MAD (Moroccan Dirham)</option>
+                            <option>EUR (€)</option>
+                            <option>USD ($)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Language</label>
+                        <select>
+                            <option>French</option>
+                            <option>English</option>
+                            <option>Arabic</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-top:20px; text-align:right;">
+                    <button class="btn-gold" onclick="showToast('Settings saved successfully!')">Save Preferences</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= FLOATING QUICK ACTIONS ================= -->
+    <div class="quick-actions-container" id="quick-actions">
+        <button class="quick-actions-btn" onclick="toggleQuickActions()">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+        <div class="quick-actions-menu">
+            <div class="quick-action-item" onclick="toggleQuickActions(); openProductModal();">
+                <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                Add Product
+            </div>
+            <div class="quick-action-item" onclick="toggleQuickActions(); triggerNewOrderAction();">
+                <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                New Order
+            </div>
+            <div class="quick-action-item" onclick="toggleQuickActions(); exportDataCSV();">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Export CSV
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= TOASTS ================= -->
+    <div class="toast" id="global-toast">
+        <span id="toast-icon">✨</span>
+        <span id="toast-message">Exporting data...</span>
+    </div>
+
+    <!-- ================= MODAL 1: ADD/EDIT PRODUCT ================= -->
+    <div class="modal-overlay" id="product-modal" onclick="closeModalOnOverlay(event, 'product-modal')">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title" id="product-modal-title">Add New Luxury Product</div>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form" onsubmit="saveProduct(event)">
+                    <input type="hidden" id="form-product-id">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Product Name</label>
+                            <input type="text" id="p-name" placeholder="e.g. Aurelia Stiletto" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="p-category" required>
+                                <option value="Heels">Heels</option>
+                                <option value="Boots">Boots</option>
+                                <option value="Loafers">Loafers</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Sandals">Sandals</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Emoji Icon</label>
+                            <select id="p-emoji" required>
+                                <option value="👠">👠 Heels</option>
+                                <option value="🥾">🥾 Boots</option>
+                                <option value="👞">👞 Loafers</option>
+                                <option value="👜">👜 Bags</option>
+                                <option value="👡">👡 Sandals</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (MAD)</label>
+                            <input type="number" id="p-price" placeholder="e.g. 1490" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Compare Price (MAD)</label>
+                            <input type="number" id="p-compare-price" placeholder="e.g. 1990">
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Quantity</label>
+                            <input type="number" id="p-stock" placeholder="e.g. 24" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggle-switch" style="margin-top: 30px;">
+                                <input type="checkbox" id="p-active" checked>
+                                <div class="toggle-slider"></div>
+                                <label for="p-active" style="cursor:pointer; text-transform:none;">Set Active Status</label>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Description</label>
+                            <textarea id="p-desc" placeholder="Premium materials and crafted in Italy..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Color Variants</label>
+                            <div class="variants-group">
+                                <div class="checkbox-btn">
+                                    <input type="checkbox" id="c-gold" checked>
+                                    <label for="c-gold">Gold Signature</label>
+                                </div>
+                                <div class="checkbox-btn">
+                                    <input type="checkbox" id="c-black" checked>
+                                    <label for="c-black">Nero Black</label>
+                                </div>
+                                <div class="checkbox-btn">
+                                    <input type="checkbox" id="c-cream">
+                                    <label for="c-cream">Ivory Cream</label>
+                                </div>
+                                <div class="checkbox-btn">
+                                    <input type="checkbox" id="c-red">
+                                    <label for="c-red">Rosso Red</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Size Variants (EU)</label>
+                            <div class="variants-group">
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-35"><label for="sz-35">35</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-36" checked><label for="sz-36">36</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-37" checked><label for="sz-37">37</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-38" checked><label for="sz-38">38</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-39" checked><label for="sz-39">39</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-40"><label for="sz-40">40</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-41"><label for="sz-41">41</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-42"><label for="sz-42">42</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-43"><label for="sz-43">43</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-44"><label for="sz-44">44</label></div>
+                                <div class="checkbox-btn"><input type="checkbox" id="sz-45"><label for="sz-45">45</label></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 24px; text-align:right;">
+                        <button type="button" class="btn-outline" onclick="closeProductModal()" style="margin-right:12px;">Cancel</button>
+                        <button type="submit" class="btn-gold" id="product-modal-save-btn">Save Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL 2: ORDER DETAIL ================= -->
+    <div class="modal-overlay" id="order-modal" onclick="closeModalOnOverlay(event, 'order-modal')">
+        <div class="modal-container" style="max-width:750px;">
+            <div class="modal-header">
+                <div class="modal-title" id="order-modal-title">Order #CS-2601 Detail</div>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="order-modal-body">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL 3: CUSTOMER DETAIL ================= -->
+    <div class="modal-overlay" id="customer-modal" onclick="closeModalOnOverlay(event, 'customer-modal')">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">Customer Portfolio</div>
+                <button class="modal-close" onclick="closeCustomerModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="customer-modal-body">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= APPLICATION SCRIPTS ================= -->
+    <script>
+        // MOCK DATABASE & STATE
+        let activeSection = 'dashboard';
+
+        let products = [
+            { id: 1, name: "Aurelia Stiletto", category: "Heels", price: 1490, stock: 24, status: "Active", emoji: "👠" },
+            { id: 2, name: "Imperia Leather Boot", category: "Boots", price: 1800, stock: 15, status: "Active", emoji: "🥾" },
+            { id: 3, name: "Marrakech Loafer", category: "Loafers", price: 1400, stock: 4, status: "Active", emoji: "👞" },
+            { id: 4, name: "Verona Handbag", category: "Bags", price: 1800, stock: 12, status: "Active", emoji: "👜" },
+            { id: 5, name: "Como Leather Sandal", category: "Sandals", price: 950, stock: 35, status: "Active", emoji: "👡" },
+            { id: 6, name: "Venezia Pumps", category: "Heels", price: 1600, stock: 10, status: "Active", emoji: "👠" },
+            { id: 7, name: "Sahara Desert Boot", category: "Boots", price: 2100, stock: 0, status: "Out of Stock", emoji: "🥾" },
+            { id: 8, name: "Suede Driver Loafer", category: "Loafers", price: 1200, stock: 8, status: "Draft", emoji: "👞" },
+            { id: 9, name: "Bespoke Oxford Shoe", category: "Loafers", price: 3200, stock: 3, status: "Active", emoji: "👞" },
+            { id: 10, name: "Atlas Velvet Slipper", category: "Loafers", price: 1500, stock: 11, status: "Active", emoji: "👞" }
+        ];
+
+        let orders = [
+            { id: "CS-2601", customer: "Laila Benjelloun", email: "laila@benjelloun.ma", date: "2026-07-16", items: "1x Aurelia Stiletto", total: 1490, payment: "Credit Card", status: "Delivered", itemsDetail: [{ emoji: "👠", name: "Aurelia Stiletto", qty: 1, price: 1490 }], phone: "+212 661-458923", address: "14 Boulevard d'Anfa, Casablanca", timeline: ["Placed (Jul 15)", "Confirmed (Jul 15)", "Shipped (Jul 15)", "Delivered (Jul 16)"] },
+            { id: "CS-2602", customer: "Youssef El Alami", email: "youssef@alami.net", date: "2026-07-15", items: "1x Imperia Leather Boot", total: 1800, payment: "Cash on Delivery", status: "Processing", itemsDetail: [{ emoji: "🥾", name: "Imperia Leather Boot", qty: 1, price: 1800 }], phone: "+212 661-897455", address: "8 Villa Royale, Hay Riad, Rabat", timeline: ["Placed (Jul 15)", "Confirmed (Jul 15)", "Processing"] },
+            { id: "CS-2603", customer: "Amine Chraibi", email: "amine@chraibi.com", date: "2026-07-14", items: "1x Verona Handbag, 1x Como Sandal", total: 2750, payment: "Credit Card", status: "Shipped", itemsDetail: [{ emoji: "👜", name: "Verona Handbag", qty: 1, price: 1800 }, { emoji: "👡", name: "Como Leather Sandal", qty: 1, price: 950 }], phone: "+212 662-114488", address: "Route de l'Ourika, Marrakech", timeline: ["Placed (Jul 14)", "Confirmed (Jul 14)", "Shipped (Jul 14)"] },
+            { id: "CS-2604", customer: "Sofia Amrani", email: "sofia@amrani.ma", date: "2026-07-14", items: "1x Aurelia Stiletto", total: 1490, payment: "Credit Card", status: "Delivered", itemsDetail: [{ emoji: "👠", name: "Aurelia Stiletto", qty: 1, price: 1490 }], phone: "+212 663-741258", address: "42 Rue Taza, Fès", timeline: ["Placed (Jul 13)", "Confirmed (Jul 13)", "Shipped (Jul 14)", "Delivered (Jul 14)"] },
+            { id: "CS-2605", customer: "Tarik Bennis", email: "tarik@bennis.co.ma", date: "2026-07-13", items: "1x Marrakech Loafer", total: 1400, payment: "Cash on Delivery", status: "Pending", itemsDetail: [{ emoji: "👞", name: "Marrakech Loafer", qty: 1, price: 1400 }], phone: "+212 661-998877", address: "12 Avenue Hassan II, Agadir", timeline: ["Placed (Jul 13)"] },
+            { id: "CS-2606", customer: "Malika Meziane", email: "malika@meziane.com", date: "2026-07-12", items: "1x Venezia Pumps", total: 1600, payment: "Credit Card", status: "Cancelled", itemsDetail: [{ emoji: "👠", name: "Venezia Pumps", qty: 1, price: 1600 }], phone: "+212 662-556677", address: "24 Rue de Goulmima, Casablanca", timeline: ["Placed (Jul 12)", "Cancelled (Jul 12)"] },
+            { id: "CS-2607", customer: "Karim Tazi", email: "karim@tazi.ma", date: "2026-07-11", items: "1x Suede Driver Loafer", total: 1200, payment: "Credit Card", status: "Delivered", itemsDetail: [{ emoji: "👞", name: "Suede Driver Loafer", qty: 1, price: 1200 }], phone: "+212 661-123456", address: "Villa 4, California, Casablanca", timeline: ["Placed (Jul 10)", "Confirmed (Jul 10)", "Shipped (Jul 11)", "Delivered (Jul 11)"] },
+            { id: "CS-2608", customer: "Ghita Oudghiri", email: "ghita@oudghiri.net", date: "2026-07-10", items: "1x Como Leather Sandal", total: 950, payment: "Credit Card", status: "Delivered", itemsDetail: [{ emoji: "👡", name: "Como Leather Sandal", qty: 1, price: 950 }], phone: "+212 663-332211", address: "Avenue Mohammed V, Tangier", timeline: ["Placed (Jul 9)", "Confirmed (Jul 9)", "Shipped (Jul 10)", "Delivered (Jul 10)"] }
+        ];
+
+        let customers = [
+            { id: 1, initials: "LB", name: "Laila Benjelloun", email: "laila@benjelloun.ma", phone: "+212 661-458923", country: "Morocco", ordersCount: 14, totalSpent: 22400, tier: "VIP", joined: "2025-01-15" },
+            { id: 2, initials: "YE", name: "Youssef El Alami", email: "youssef@alami.net", phone: "+212 661-897455", country: "Morocco", ordersCount: 8, totalSpent: 14800, tier: "Gold", joined: "2025-03-22" },
+            { id: 3, initials: "AC", name: "Amine Chraibi", email: "amine@chraibi.com", phone: "+212 662-114488", country: "Morocco", ordersCount: 4, totalSpent: 6200, tier: "Regular", joined: "2025-11-05" },
+            { id: 4, initials: "SA", name: "Sofia Amrani", email: "sofia@amrani.ma", phone: "+212 663-741258", country: "Morocco", ordersCount: 11, totalSpent: 18900, tier: "VIP", joined: "2025-02-18" },
+            { id: 5, initials: "TB", name: "Tarik Bennis", email: "tarik@bennis.co.ma", phone: "+212 661-998877", country: "Morocco", ordersCount: 3, totalSpent: 4100, tier: "Regular", joined: "2026-05-12" },
+            { id: 6, initials: "MM", name: "Malika Meziane", email: "malika@meziane.com", phone: "+212 662-556677", country: "Morocco", ordersCount: 7, totalSpent: 11200, tier: "Gold", joined: "2025-08-30" },
+            { id: 7, initials: "KT", name: "Karim Tazi", email: "karim@tazi.ma", phone: "+212 661-123456", country: "Morocco", ordersCount: 16, totalSpent: 28900, tier: "VIP", joined: "2024-11-12" },
+            { id: 8, initials: "GO", name: "Ghita Oudghiri", email: "ghita@oudghiri.net", phone: "+212 663-332211", country: "Morocco", ordersCount: 2, totalSpent: 1900, tier: "Regular", joined: "2026-06-01" }
+        ];
+
+        // GLOBAL STARTUP
+        window.addEventListener('load', () => {
+            renderDashboardOrders();
+            renderProducts();
+            renderOrders();
+            renderCustomers();
+            renderDailyRevenueChart();
+        });
+
+        // ROUTING / TAB SWITCHING
+        function switchSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav li').forEach(li => li.classList.remove('active'));
+
+            const targetSection = document.getElementById(`section-${sectionId}`);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            const navItem = document.querySelector(`.sidebar-nav li[data-section="${sectionId}"]`);
+            if (navItem) {
+                navItem.classList.add('active');
+            }
+
+            // Set Page Title
+            let titleText = sectionId.charAt(0).toUpperCase() + sectionId.slice(1);
+            if (sectionId === 'dashboard') titleText = 'Luxury Dashboard';
+            document.getElementById('page-title').innerText = titleText;
+
+            activeSection = sectionId;
+        }
+
+        // FLOATING ACTION MENU
+        function toggleQuickActions() {
+            document.getElementById('quick-actions').classList.toggle('active');
+        }
+
+        // TOAST SYSTEM
+        function showToast(message, icon = '✨') {
+            const toast = document.getElementById('global-toast');
+            document.getElementById('toast-icon').innerText = icon;
+            document.getElementById('toast-message').innerText = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        function triggerNewOrderAction() {
+            showToast('Opening Order Formulation Desk...', '🛒');
+        }
+
+        function exportDataCSV() {
+            showToast('Exporting data as CSV...', '📊');
+            setTimeout(() => {
+                showToast('CSV downloaded successfully!', '✅');
+            }, 1500);
+        }
+
+        // ================= DASHBOARD CONTROLLERS =================
+        function renderDashboardOrders() {
+            const tbody = document.getElementById('dashboard-orders-table');
+            tbody.innerHTML = '';
+            orders.slice(0, 5).forEach(order => {
+                const badgeClass = getStatusBadgeClass(order.status);
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:600; color:var(--gold-light); cursor:pointer;" onclick="openOrderModal('${order.id}')">${order.id}</td>
+                        <td>${order.customer}</td>
+                        <td style="font-size:13px; color:var(--text-muted);">${order.items}</td>
+                        <td>${order.total.toLocaleString()} MAD</td>
+                        <td><span class="badge ${badgeClass}">${order.status}</span></td>
+                        <td>${order.date}</td>
+                        <td>
+                            <button class="btn-icon" onclick="openOrderModal('${order.id}')" title="View Detail">
+                                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'Delivered': return 'badge-success';
+                case 'Processing': return 'badge-warning';
+                case 'Shipped': return 'badge-info';
+                case 'Cancelled': return 'badge-danger';
+                default: return 'badge-regular';
+            }
+        }
+
+        // ================= PRODUCT CONTROLLERS =================
+        function renderProducts(filteredList = products) {
+            const tbody = document.getElementById('products-table-body');
+            tbody.innerHTML = '';
+            filteredList.forEach(p => {
+                const statusBadge = p.status === 'Active' ? 'badge-success' : p.status === 'Draft' ? 'badge-regular' : 'badge-danger';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div style="width:40px; height:40px; border-radius:4px; background-color:var(--black-border); display:flex; align-items:center; justify-content:center; font-size:20px;">
+                                ${p.emoji}
+                            </div>
+                        </td>
+                        <td style="font-weight:600;">${p.name}</td>
+                        <td>${p.category}</td>
+                        <td style="color:var(--gold-light); font-weight:500;">${p.price.toLocaleString()} MAD</td>
+                        <td>${p.stock}</td>
+                        <td><span class="badge ${statusBadge}">${p.status}</span></td>
+                        <td>
+                            <button class="btn-icon" onclick="openProductModal(${p.id})" title="Edit"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                            <button class="btn-icon" onclick="deleteProduct(${p.id})" title="Delete" style="color:var(--danger);"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('product-pagination-info').innerText = `Showing ${filteredList.length} of ${products.length} products`;
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('product-search').value.toLowerCase();
+            const category = document.getElementById('product-category').value;
+            const sortBy = document.getElementById('product-sort').value;
+
+            let result = products.filter(p => {
+                const matchesQuery = p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query);
+                const matchesCategory = category === 'All' || p.category === category;
+                return matchesQuery && matchesCategory;
+            });
+
+            if (sortBy === 'name') {
+                result.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sortBy === 'price-desc') {
+                result.sort((a, b) => b.price - a.price);
+            } else if (sortBy === 'price-asc') {
+                result.sort((a, b) => a.price - b.price);
+            } else if (sortBy === 'stock') {
+                result.sort((a, b) => b.stock - a.stock);
+            }
+
+            renderProducts(result);
+        }
+
+        // ADD / EDIT PRODUCT MODAL HANDLERS
+        function openProductModal(id = null) {
+            const modal = document.getElementById('product-modal');
+            const title = document.getElementById('product-modal-title');
+            const form = document.getElementById('product-form');
+
+            form.reset();
+            document.getElementById('form-product-id').value = '';
+
+            if (id) {
+                title.innerText = "Edit Luxury Product Portfolio";
+                const p = products.find(prod => prod.id === id);
+                if (p) {
+                    document.getElementById('form-product-id').value = p.id;
+                    document.getElementById('p-name').value = p.name;
+                    document.getElementById('p-category').value = p.category;
+                    document.getElementById('p-emoji').value = p.emoji;
+                    document.getElementById('p-price').value = p.price;
+                    document.getElementById('p-stock').value = p.stock;
+                    document.getElementById('p-active').checked = p.status === 'Active';
+                }
+            } else {
+                title.innerText = "Add New Luxury Product";
+            }
+            modal.classList.add('active');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.remove('active');
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            const id = document.getElementById('form-product-id').value;
+            const name = document.getElementById('p-name').value;
+            const category = document.getElementById('p-category').value;
+            const emoji = document.getElementById('p-emoji').value;
+            const price = parseFloat(document.getElementById('p-price').value);
+            const stock = parseInt(document.getElementById('p-stock').value);
+            const isActive = document.getElementById('p-active').checked;
+            const status = isActive ? (stock > 0 ? "Active" : "Out of Stock") : "Draft";
+
+            if (id) {
+                // Update
+                const index = products.findIndex(p => p.id == id);
+                if (index !== -1) {
+                    products[index] = { ...products[index], name, category, emoji, price, stock, status };
+                    showToast('Product portfolio updated successfully!');
+                }
+            } else {
+                // Insert
+                const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
+                products.push({ id: newId, name, category, emoji, price, stock, status });
+                showToast('New product registered successfully!');
+            }
+
+            closeProductModal();
+            renderProducts();
+            filterProducts();
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Are you sure you want to remove this exquisite piece from inventory?")) {
+                products = products.filter(p => p.id !== id);
+                renderProducts();
+                filterProducts();
+                showToast('Product removed from database.', '🗑️');
+            }
+        }
+
+        // ================= ORDER CONTROLLERS =================
+        function renderOrders(filteredList = orders) {
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = '';
+            filteredList.forEach(order => {
+                const badgeClass = getStatusBadgeClass(order.status);
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:600; color:var(--gold-light); cursor:pointer;" onclick="openOrderModal('${order.id}')">${order.id}</td>
+                        <td>${order.customer}</td>
+                        <td>${order.date}</td>
+                        <td style="font-size:13px; color:var(--text-muted);">${order.items}</td>
+                        <td>${order.total.toLocaleString()} MAD</td>
+                        <td>${order.payment}</td>
+                        <td><span class="badge ${badgeClass}">${order.status}</span></td>
+                        <td>
+                            <button class="btn-icon" onclick="openOrderModal('${order.id}')" title="View Detail"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                            <button class="btn-icon" onclick="showToast('Invoice generated for ${order.id}')" title="Print Invoice"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('order-pagination-info').innerText = `Showing ${filteredList.length} of ${orders.length} orders`;
+        }
+
+        function filterOrdersByTab(statusTab, buttonEl) {
+            document.querySelectorAll('.filter-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+            buttonEl.classList.add('active');
+
+            if (statusTab === 'All') {
+                renderOrders(orders);
+            } else {
+                const filtered = orders.filter(o => o.status === statusTab);
+                renderOrders(filtered);
+            }
+        }
+
+        // ORDER DETAIL MODAL CONTROLS
+        function openOrderModal(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const modal = document.getElementById('order-modal');
+            const title = document.getElementById('order-modal-title');
+            title.innerText = `Order Detail #${order.id}`;
+
+            let itemsHTML = '';
+            order.itemsDetail.forEach(item => {
+                itemsHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--black-border); padding:10px 0;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-size:24px;">${item.emoji}</span>
+                            <div>
+                                <div style="font-weight:600;">${item.name}</div>
+                                <div style="font-size:12px; color:var(--text-muted);">Qty: ${item.qty}</div>
+                            </div>
+                        </div>
+                        <div style="font-weight:600; color:var(--gold-light);">${(item.price * item.qty).toLocaleString()} MAD</div>
+                    </div>
+                `;
+            });
+
+            let timelineHTML = '';
+            const steps = ["Placed", "Confirmed", "Shipped", "Delivered"];
+            steps.forEach((step, idx) => {
+                const isCompleted = order.timeline.some(t => t.startsWith(step));
+                const timelineText = order.timeline.find(t => t.startsWith(step)) || step;
+                timelineHTML += `
+                    <div class="timeline-item ${isCompleted ? 'completed' : ''}">
+                        <div class="timeline-title">${timelineText}</div>
+                        <div class="timeline-date">${isCompleted ? 'Validated' : 'Pending'}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('order-modal-body').innerHTML = `
+                <div class="order-detail-grid">
+                    <div>
+                        <div style="margin-bottom:20px;">
+                            <h4 style="font-family:'Playfair Display', serif; font-size:16px; margin-bottom:10px; color:var(--gold-light);">Purchased Masterpieces</h4>
+                            ${itemsHTML}
+                            <div style="display:flex; justify-content:space-between; margin-top:20px; font-weight:700; font-size:16px;">
+                                <span>Grand Total</span>
+                                <span style="color:var(--gold);">${order.total.toLocaleString()} MAD</span>
+                            </div>
+                        </div>
+                        <div style="border-top:1px solid var(--black-border); padding-top:20px;">
+                            <h4 style="font-family:'Playfair Display', serif; font-size:16px; margin-bottom:10px; color:var(--gold-light);">Shipping & Logistics</h4>
+                            <p style="font-size:14px; color:var(--cream); line-height:1.6;">
+                                <strong>Recipient:</strong> ${order.customer}<br>
+                                <strong>Phone:</strong> ${order.phone}<br>
+                                <strong>Delivery Address:</strong> ${order.address}<br>
+                                <strong>Payment Channel:</strong> ${order.payment}
+                            </p>
+                        </div>
+                    </div>
+                    <div style="border-left:1px solid var(--black-border); padding-left:24px;">
+                        <h4 style="font-family:'Playfair Display', serif; font-size:16px; margin-bottom:15px; color:var(--gold-light);">Order Status Timeline</h4>
+                        <div class="timeline">
+                            ${timelineHTML}
+                        </div>
+                        <div style="margin-top:30px; display:flex; flex-direction:column; gap:10px;">
+                            <button class="btn-gold" style="width:100%;" onclick="showToast('Processing Refund for ${order.id}')">Refund Order</button>
+                            <button class="btn-outline" style="width:100%;" onclick="showToast('Invoice PDF generated.')">Print Invoice</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('order-modal').classList.remove('active');
+        }
+
+        // ================= CUSTOMER CONTROLLERS =================
+        function renderCustomers(filteredList = customers) {
+            const tbody = document.getElementById('customers-table-body');
+            tbody.innerHTML = '';
+            filteredList.forEach(cust => {
+                let badgeClass = 'badge-regular';
+                if (cust.tier === 'VIP') badgeClass = 'badge-vip';
+                else if (cust.tier === 'Gold') badgeClass = 'badge-gold';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div style="width:36px; height:36px; border-radius:50%; background-color:var(--black-border); border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display', serif; color:var(--gold); font-weight:600; font-size:12px;">
+                                    ${cust.initials}
+                                </div>
+                                <div style="font-weight:600; cursor:pointer;" onclick="openCustomerModal(${cust.id})">${cust.name}</div>
+                            </div>
+                        </td>
+                        <td>${cust.email}</td>
+                        <td>${cust.phone}</td>
+                        <td>${cust.country}</td>
+                        <td>${cust.ordersCount}</td>
+                        <td style="color:var(--gold-light); font-weight:500;">${cust.totalSpent.toLocaleString()} MAD</td>
+                        <td><span class="badge ${badgeClass}">${cust.tier}</span></td>
+                        <td>${cust.joined}</td>
+                        <td>
+                            <button class="btn-icon" onclick="openCustomerModal(${cust.id})" title="Portfolio"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('customer-pagination-info').innerText = `Showing ${filteredList.length} of ${customers.length} VIP/Regular profiles`;
+        }
+
+        function filterCustomers() {
+            const query = document.getElementById('customer-search').value.toLowerCase();
+            const tier = document.getElementById('customer-tier').value;
+
+            const filtered = customers.filter(c => {
+                const matchesQuery = c.name.toLowerCase().includes(query) || c.email.toLowerCase().includes(query);
+                const matchesTier = tier === 'All' || c.tier === tier;
+                return matchesQuery && matchesTier;
+            });
+
+            renderCustomers(filtered);
+        }
+
+        function openCustomerModal(id) {
+            const cust = customers.find(c => c.id === id);
+            if (!cust) return;
+
+            const modal = document.getElementById('customer-modal');
+            let badgeClass = 'badge-regular';
+            if (cust.tier === 'VIP') badgeClass = 'badge-vip';
+            else if (cust.tier === 'Gold') badgeClass = 'badge-gold';
+
+            document.getElementById('customer-modal-body').innerHTML = `
+                <div class="profile-card">
+                    <div class="profile-avatar">${cust.initials}</div>
+                    <div>
+                        <h3 style="font-family:'Playfair Display', serif; font-size:20px; font-weight:600; color:var(--cream);">${cust.name}</h3>
+                        <div style="margin-top:6px; display:flex; align-items:center; gap:8px;">
+                            <span class="badge ${badgeClass}">${cust.tier} Member</span>
+                            <span style="font-size:12px; color:var(--text-muted);">Joined ${cust.joined}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom:20px;">
+                    <div class="stat-card" style="padding:14px; background-color:var(--black-soft);">
+                        <div class="stat-title" style="font-size:10px;">Total Orders</div>
+                        <div class="stat-value" style="font-size:18px; color:var(--gold); margin-top:4px;">${cust.ordersCount}</div>
+                    </div>
+                    <div class="stat-card" style="padding:14px; background-color:var(--black-soft);">
+                        <div class="stat-title" style="font-size:10px;">Total Spent</div>
+                        <div class="stat-value" style="font-size:18px; color:var(--gold); margin-top:4px;">${cust.totalSpent.toLocaleString()} MAD</div>
+                    </div>
+                    <div class="stat-card" style="padding:14px; background-color:var(--black-soft);">
+                        <div class="stat-title" style="font-size:10px;">Avg Basket</div>
+                        <div class="stat-value" style="font-size:18px; color:var(--gold); margin-top:4px;">${Math.round(cust.totalSpent / cust.ordersCount).toLocaleString()} MAD</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:15px;">
+                    <h4 style="font-family:'Playfair Display', serif; font-size:15px; margin-bottom:10px; color:var(--gold-light);">Contact Details</h4>
+                    <p style="font-size:13px; color:var(--cream); line-height:1.6;">
+                        <strong>Corporate Email:</strong> ${cust.email}<br>
+                        <strong>Direct Line:</strong> ${cust.phone}<br>
+                        <strong>Primary Territory:</strong> Morocco
+                    </p>
+                </div>
+
+                <div>
+                    <h4 style="font-family:'Playfair Display', serif; font-size:15px; margin-bottom:10px; color:var(--gold-light);">Historical Orders</h4>
+                    <div style="max-height:120px; overflow-y:auto; border:1px solid var(--black-border); border-radius:4px; padding:10px;">
+                        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); padding-bottom:6px; border-bottom:1px solid var(--black-border);">
+                            <span>Order #</span><span>Spent</span><span>Date</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:13px; padding:6px 0;">
+                            <span style="color:var(--gold);">CS-2601</span><span>1,490 MAD</span><span>2026-07-16</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('customer-modal').classList.remove('active');
+        }
+
+        // ================= ANALYTICS CONTROLLERS =================
+        function renderDailyRevenueChart() {
+            const container = document.getElementById('daily-revenue-chart');
+            // Retain axis values
+            const axisHTML = `<div class="chart-y-axis">
+                <div>8k</div>
+                <div>4k</div>
+                <div>800</div>
+            </div>`;
+            container.innerHTML = axisHTML;
+
+            // Generate 30 columns
+            for (let i = 1; i <= 30; i++) {
+                const randomVal = Math.floor(Math.random() * (8000 - 800 + 1)) + 800;
+                const percentage = (randomVal / 8000) * 100;
+                container.innerHTML += `
+                    <div class="chart-bar-wrapper" style="margin: 0 1px;">
+                        <div class="chart-bar" style="height: ${percentage}%; width: 70%;" data-value="${randomVal} MAD">
+                            <div class="chart-bar-tooltip">${randomVal} MAD</div>
+                        </div>
+                        <div class="chart-label" style="font-size:8px;">${i}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // GLOBAL SEARCH BAR IMPLEMENTATION
+        function globalSearchHandler(query) {
+            query = query.toLowerCase();
+            showToast(`Searching for "${query}" across matrices...`);
+            // Automatically switch contexts depending on results
+            if (activeSection === 'products') {
+                document.getElementById('product-search').value = query;
+                filterProducts();
+            } else if (activeSection === 'customers') {
+                document.getElementById('customer-search').value = query;
+                filterCustomers();
+            }
+        }
+
+        // MODAL OVERLAY HELPER
+        function closeModalOnOverlay(event, modalId) {
+            if (event.target.id === modalId) {
+                document.getElementById(modalId).classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
