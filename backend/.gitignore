@@ -1,0 +1,64 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+web_modules/
+
+# Build and production output
+dist/
+build/
+out/
+.next/
+.nuxt/
+
+# Environment configurations
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for instrumented code coverage downloads
+coverage/
+.nyc_output/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing
+.jest/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+
+# Base44 internal files
+.agents/
+base44/
+incoming_files/
+
+# OS files
+.DS_Store
+Thumbs.db
