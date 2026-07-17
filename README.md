@@ -1,49 +1,47 @@
-# COSMAN — Luxury Footwear E-commerce
+# COSMAN — Luxury Footwear E-Commerce
 
-A world-class luxury e-commerce website for **COSMAN**, a premium shoe and accessories brand based in Morocco.
+Full-stack luxury footwear brand platform.
 
-## Live Pages
-| Page | File | Status |
-|------|------|--------|
-| Homepage | `index.html` | ✅ Phase 3 |
-| Shop | `shop.html` | ✅ Phase 4 |
-| Product Detail | `product.html` | ✅ Phase 5 |
-| Cart & Checkout | `cart.html` | ✅ Phase 6 |
-| Auth & Profile | `auth.html` | ✅ Phase 7 |
-| Admin Dashboard | `admin.html` | ✅ Phase 8 |
+## Repository Structure
+```
+cosan/
+├── frontend/    # Static HTML/CSS/JS — pure frontend, no build step
+├── backend/     # Node.js + Express + Prisma REST API
+├── docs/        # Shared documentation (if any)
+└── README.md    # This file
+```
 
-## Completed Phases
-- ✅ **Phase 1** — Brand Identity
-- ✅ **Phase 2** — Design System
-- ✅ **Phase 3** — Homepage
-- ✅ **Phase 4** — Shop (grid, filters, search, sorting)
-- ✅ **Phase 5** — Product Detail (gallery, zoom, size picker, reviews)
-- ✅ **Phase 6** — Cart & Checkout (promo codes, WhatsApp order, payment tabs)
-- ✅ **Phase 7** — Auth & Profile (login, register, orders, wishlist, settings)
-- ✅ **Phase 8** — Admin Dashboard (products, orders, customers, analytics)
-- ✅ **Phase 9** — SEO, Accessibility, PWA, Performance
+## Two Independent Projects
 
-## Phase 9 Optimizations Applied
-- Full SEO meta tags on all pages (title, description, canonical, robots)
-- Open Graph + Twitter Card on all pages
-- JSON-LD structured data (Product, WebSite, CollectionPage schemas)
-- PWA: Web App Manifest + Service Worker (cache-first strategy)
-- Accessibility: skip-to-content link, focus-visible outlines, reduced-motion, ARIA labels, role="main"
-- Performance: font preconnect, dns-prefetch, service worker pre-caching
-- robots.txt + sitemap.xml
-- Mobile: 44px minimum touch targets, text-size-adjust
+### Frontend (`/frontend`)
+Pure HTML/CSS/JavaScript. No framework, no build step, no backend dependency at the code level.
+- Served as static files
+- Communicates with backend exclusively via REST API calls
+- Can be deployed to any static host (Vercel, Netlify, Cloudflare Pages, S3)
+- See [`frontend/README.md`](frontend/README.md)
 
-## Brand Identity
-| Token | Value |
-|-------|-------|
-| Primary Black | `#0A0A0A` |
-| Gold | `#C9A84C` |
-| Cream | `#F5F0E8` |
-| Heading Font | Playfair Display |
-| Body Font | Inter |
+### Backend (`/backend`)
+Node.js + Express + Prisma + PostgreSQL REST API.
+- Fully independent — no knowledge of the frontend
+- Any HTTP client can consume the API
+- Docker support (app + PostgreSQL + Redis)
+- See [`backend/README.md`](backend/README.md)
 
-## Tech Stack
-Pure HTML · CSS · Vanilla JS · PWA — no frameworks, pixel-perfect luxury UI.
+## Communication
+```
+Frontend (browser)  →  HTTP/REST (JSON)  →  Backend (Express API)
+                           ↓
+                    PostgreSQL + Redis
+```
 
----
-*Built with ♥ in Morocco by Vesper AI*
+The frontend calls the backend via REST endpoints under `/api/*`.
+No shared code, no shared types, no build-time coupling.
+
+## Deployment
+- **Frontend**: Deploy `frontend/` to any static hosting
+- **Backend**: Deploy `backend/` to any Node.js host (Render, Railway, Fly.io, AWS)
+- Configure `API_BASE_URL` in frontend to point to the backend URL
+
+## Brand
+- Colors: Black `#0A0A0A`, Gold `#C9A84C`, Cream `#F5F0E8`
+- Origin: Morocco

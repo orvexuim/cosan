@@ -25,7 +25,7 @@ app.use(helmet());
 
 // Enable CORS
 app.use(cors({
-  origin: config.app.env === 'production' ? config.app.url : '*',
+  origin: config.cors?.origin || '*',
   credentials: true,
 }));
 

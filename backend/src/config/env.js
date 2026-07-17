@@ -47,6 +47,10 @@ const parseEnv = () => {
 const validatedEnv = parseEnv();
 
 export const config = {
+  cors: {
+    origin: process.env.CORS_ORIGIN || '*',
+  },
+
   app: {
     port: validatedEnv.PORT,
     env: validatedEnv.NODE_ENV,
