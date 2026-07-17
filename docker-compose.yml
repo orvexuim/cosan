@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cosman-prod-web
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ssl-certs:/etc/ssl/certs:ro
+      - ssl-private:/etc/ssl/private:ro
+    networks:
+      - cosman-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: cosman-auto-updater
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 300 --label-enable
+    restart: always
+    networks:
+      - cosman-net
+
+networks:
+  cosman-net:
+    driver: bridge
+
+volumes:
+  ssl-certs:
+    external: true
+    name: cosman-ssl-certs
+  ssl-private:
+    external: true
+    name: cosman-ssl-private

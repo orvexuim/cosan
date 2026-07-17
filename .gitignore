@@ -1,0 +1,11 @@
+# Production additions
+.env
+.env.local
+.env.production
+*.pem
+*.key
+*.crt
+dist/
+.vercel/
+.DS_Store
+node_modules/
