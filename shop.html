@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+  <!-- ═══ SEO & PERFORMANCE ═══ -->
+  <meta name="description" content="Browse 500+ premium styles — heels, oxfords, loafers, sandals, and luxury bags. Filter by size, color, and price. Free shipping on orders over 500 MAD."/>
+  <meta name="keywords" content="luxury shoes Morocco, COSMAN footwear, chaussures luxe Maroc, premium heels, designer shoes Casablanca, maroquinerie luxe"/>
+  <meta name="author" content="COSMAN"/>
+  <meta name="robots" content="index, follow, max-image-preview:large"/>
+  <link rel="canonical" href="https://orvexuim.github.io/cosan/shop.html"/>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="COSMAN"/>
+  <meta property="og:title" content="Shop All Collections — COSMAN Luxury Footwear"/>
+  <meta property="og:description" content="Browse 500+ premium styles — heels, oxfords, loafers, sandals, and luxury bags. Filter by size, color, and price. Free shipping on orders over 500 MAD."/>
+  <meta property="og:url" content="https://orvexuim.github.io/cosan/shop.html"/>
+  <meta property="og:image" content="https://orvexuim.github.io/cosan/og-shop.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:locale" content="en_US"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Shop All Collections — COSMAN Luxury Footwear"/>
+  <meta name="twitter:description" content="Browse 500+ premium styles — heels, oxfords, loafers, sandals, and luxury bags. Filter by size, color, and price. Free shipping on orders over 500 MAD."/>
+  <meta name="twitter:image" content="https://orvexuim.github.io/cosan/og-shop.jpg"/>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#C9A84C"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="COSMAN"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+
+  <!-- Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com"/>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {{"@context":"https://schema.org","@type":"CollectionPage","name":"COSMAN Shop","description":"Browse all COSMAN luxury footwear collections"}}
+  </script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if('serviceWorker' in navigator){
+      window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+    }
+  </script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shop All Collections — COSMAN Luxury Footwear</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#0A0A0A;--black-soft:#111111;--black-card:#161616;--black-border:#2A2A2A;--gold:#C9A84C;--gold-light:#E2C97E;--gold-dark:#A07830;--gold-glow:rgba(201,168,76,0.12);--cream:#F5F0E8;--text-muted:#888888;--text-subtle:#555555;--radius-sm:4px;--radius-md:8px;--radius-lg:16px;--radius-full:9999px;--transition:all 0.32s cubic-bezier(0.4,0,0.2,1);--sidebar-w:280px;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--cream);overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:2px;}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.1);}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-badge{width:40px;height:40px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--gold);}
+.nav-wordmark{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--cream);letter-spacing:4px;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{text-decoration:none;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);transition:var(--transition);position:relative;}
+.nav-links a.active,.nav-links a:hover{color:var(--gold);}
+.nav-links a.active::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);}
+.nav-actions{display:flex;gap:20px;align-items:center;}
+.nav-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:6px;transition:var(--transition);}
+.nav-btn:hover{color:var(--gold);}
+.cart-pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid var(--black-border);border-radius:var(--radius-full);font-size:11px;font-weight:600;color:var(--cream);cursor:pointer;transition:var(--transition);background:none;}
+.cart-pill:hover{border-color:var(--gold);color:var(--gold);}
+.cart-count{width:18px;height:18px;background:var(--gold);border-radius:50%;font-size:9px;font-weight:700;color:var(--black);display:flex;align-items:center;justify-content:center;}
+.shop-hero{margin-top:72px;padding:60px 40px 40px;background:linear-gradient(135deg,var(--black) 0%,var(--black-soft) 100%);border-bottom:1px solid var(--black-border);position:relative;overflow:hidden;}
+.shop-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%);}
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:20px;}
+.breadcrumb a{font-size:11px;letter-spacing:1px;color:var(--text-muted);text-decoration:none;transition:var(--transition);}
+.breadcrumb a:hover{color:var(--gold);}
+.breadcrumb-sep{color:var(--text-subtle);font-size:10px;}
+.breadcrumb-current{font-size:11px;letter-spacing:1px;color:var(--gold);}
+.shop-hero h1{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,56px);font-weight:700;line-height:1.1;}
+.shop-hero h1 em{font-style:italic;color:var(--gold);}
+.shop-hero-sub{font-size:13px;color:var(--text-muted);margin-top:10px;}
+.search-wrap{margin-top:28px;max-width:520px;position:relative;}
+.search-input{width:100%;padding:14px 48px 14px 20px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-full);color:var(--cream);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:var(--transition);}
+.search-input::placeholder{color:var(--text-subtle);}
+.search-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.08);}
+.search-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
+.shop-layout{display:flex;min-height:calc(100vh - 72px);}
+.sidebar{width:var(--sidebar-w);flex-shrink:0;border-right:1px solid var(--black-border);padding:32px 24px;position:sticky;top:72px;height:calc(100vh - 72px);overflow-y:auto;background:var(--black-soft);}
+.filter-section{margin-bottom:32px;}
+.filter-title{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--cream);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.filter-title svg{transition:var(--transition);}
+.cat-list{display:flex;flex-direction:column;gap:4px;}
+.cat-item{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);font-size:13px;color:var(--text-muted);}
+.cat-item:hover{background:var(--gold-glow);color:var(--cream);}
+.cat-item.active{background:var(--gold-glow);color:var(--gold);font-weight:600;}
+.cat-badge{font-size:10px;padding:2px 7px;border-radius:var(--radius-full);background:var(--black-card);color:var(--text-subtle);}
+.cat-item.active .cat-badge{background:rgba(201,168,76,0.15);color:var(--gold);}
+.price-inputs{display:flex;gap:10px;align-items:center;}
+.price-input{flex:1;padding:10px 12px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-md);color:var(--cream);font-size:12px;font-family:'Inter',sans-serif;outline:none;transition:var(--transition);}
+.price-input:focus{border-color:var(--gold);}
+.price-sep{color:var(--text-subtle);font-size:12px;}
+.color-swatches{display:flex;flex-wrap:wrap;gap:8px;}
+.swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:var(--transition);}
+.swatch.active,.swatch:hover{border-color:var(--gold);transform:scale(1.1);}
+.swatch-black{background:#1a1a1a;border-color:#444;}.swatch-white{background:#f0ece4;border-color:#ccc;}.swatch-brown{background:#6B3A2A;}.swatch-camel{background:#C19A6B;}.swatch-navy{background:#1B2A4A;}.swatch-burgundy{background:#6B1A1A;}.swatch-gold{background:#C9A84C;}.swatch-nude{background:#D4A99A;}
+.size-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.size-btn{padding:6px 11px;font-size:11px;font-weight:600;border:1px solid var(--black-border);border-radius:var(--radius-sm);color:var(--text-muted);cursor:pointer;transition:var(--transition);background:none;}
+.size-btn:hover{border-color:var(--gold);color:var(--gold);}
+.size-btn.active{background:var(--gold);color:var(--black);border-color:var(--gold);}
+.rating-list{display:flex;flex-direction:column;gap:8px;}
+.rating-row{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 8px;border-radius:var(--radius-sm);transition:var(--transition);}
+.rating-row:hover{background:var(--gold-glow);}
+.stars{display:flex;gap:2px;}
+.star-filled{color:var(--gold);font-size:11px;}.star-empty{color:var(--black-border);font-size:11px;}
+.rating-label{font-size:11px;color:var(--text-muted);}
+.clear-btn{width:100%;padding:10px;background:none;border:1px solid var(--black-border);border-radius:var(--radius-md);color:var(--text-muted);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:var(--transition);margin-top:8px;font-family:'Inter',sans-serif;}
+.clear-btn:hover{border-color:var(--gold);color:var(--gold);}
+.shop-main{flex:1;padding:28px 32px;}
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+.toolbar-left{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.results-count{font-size:12px;color:var(--text-muted);}
+.results-count strong{color:var(--cream);}
+.active-filters{display:flex;gap:6px;flex-wrap:wrap;}
+.filter-tag{display:flex;align-items:center;gap:6px;padding:4px 10px;background:var(--gold-glow);border:1px solid rgba(201,168,76,0.25);border-radius:var(--radius-full);font-size:10px;font-weight:600;color:var(--gold);letter-spacing:1px;}
+.filter-tag-remove{cursor:pointer;opacity:0.7;transition:var(--transition);}
+.filter-tag-remove:hover{opacity:1;}
+.toolbar-right{display:flex;align-items:center;gap:12px;}
+.sort-select{padding:9px 32px 9px 14px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-md);color:var(--cream);font-size:12px;font-family:'Inter',sans-serif;outline:none;cursor:pointer;transition:var(--transition);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+.sort-select:focus{border-color:var(--gold);}
+.view-btns{display:flex;gap:4px;}
+.view-btn{width:34px;height:34px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);color:var(--text-muted);}
+.view-btn.active,.view-btn:hover{border-color:var(--gold);color:var(--gold);}
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.products-grid.list-view{grid-template-columns:1fr;}
+.product-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);overflow:hidden;transition:var(--transition);cursor:pointer;position:relative;animation:fadeUp 0.5s ease both;}
+.product-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.card-img{height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.card-img-icon{font-size:68px;opacity:0.15;transition:var(--transition);}
+.product-card:hover .card-img-icon{opacity:0.25;transform:scale(1.08);}
+.bg-gold{background:linear-gradient(135deg,#1a1208,#2d1f0a);}.bg-blue{background:linear-gradient(135deg,#080c14,#0d1520);}.bg-green{background:linear-gradient(135deg,#0a1008,#121e0e);}.bg-red{background:linear-gradient(135deg,#140808,#201010);}.bg-purple{background:linear-gradient(135deg,#100814,#1a0d20);}.bg-teal{background:linear-gradient(135deg,#081414,#0d1e1e);}
+.card-badge{position:absolute;top:12px;left:12px;padding:3px 9px;border-radius:var(--radius-full);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+.badge-new{background:var(--gold);color:var(--black);}.badge-hot{background:#7a1515;color:#f5a0a0;border:1px solid #c43a3a;}.badge-sale{background:transparent;color:var(--gold);border:1px solid var(--gold);}.badge-ltd{background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid rgba(201,168,76,0.4);}
+.card-actions{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px;opacity:0;transform:translateX(8px);transition:var(--transition);}
+.product-card:hover .card-actions{opacity:1;transform:translateX(0);}
+.action-btn{width:32px;height:32px;background:rgba(10,10,10,0.85);border:1px solid var(--black-border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:var(--transition);}
+.action-btn:hover{border-color:var(--gold);color:var(--gold);}
+.card-body{padding:18px;}
+.card-cat{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.card-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--cream);line-height:1.3;margin-bottom:3px;}
+.card-material{font-size:11px;color:var(--text-muted);margin-bottom:10px;}
+.card-rating{display:flex;align-items:center;gap:5px;margin-bottom:10px;}
+.r-stars{display:flex;gap:1px;}.r-star{font-size:10px;color:var(--gold);}.r-count{font-size:10px;color:var(--text-muted);}
+.card-sizes{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;}
+.sz{padding:2px 7px;font-size:9px;font-weight:600;border:1px solid var(--black-border);border-radius:3px;color:var(--text-subtle);cursor:pointer;transition:var(--transition);}
+.sz:hover{border-color:var(--gold);color:var(--gold);}
+.card-footer{display:flex;align-items:center;justify-content:space-between;}
+.card-price{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold);}
+.card-price-old{font-size:11px;color:var(--text-subtle);text-decoration:line-through;margin-left:5px;}
+.add-btn{width:36px;height:36px;background:var(--gold-glow);border:1px solid rgba(201,168,76,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gold);cursor:pointer;transition:var(--transition);}
+.add-btn:hover{background:var(--gold);color:var(--black);transform:rotate(90deg);}
+.products-grid.list-view .product-card{display:flex;flex-direction:row;}
+.products-grid.list-view .card-img{width:200px;flex-shrink:0;height:auto;min-height:180px;}
+.products-grid.list-view .card-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:24px 28px;}
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:48px;padding-bottom:20px;}
+.page-btn{width:38px;height:38px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:var(--transition);}
+.page-btn.active{background:var(--gold);color:var(--black);border-color:var(--gold);font-weight:700;}
+.page-btn:hover:not(.active){border-color:var(--gold);color:var(--gold);}
+.page-btn.dots{cursor:default;border-color:transparent;}
+.mobile-filter-btn{display:none;align-items:center;gap:8px;padding:10px 18px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-md);color:var(--cream);font-size:12px;font-weight:600;letter-spacing:1px;cursor:pointer;transition:var(--transition);}
+.mobile-filter-btn:hover{border-color:var(--gold);color:var(--gold);}
+.sidebar-overlay{display:none;position:fixed;inset:0;z-index:850;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);}
+.sidebar-overlay.open{display:block;}
+@media(max-width:1100px){.products-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:900px){.sidebar{position:fixed;top:72px;left:-100%;bottom:0;z-index:900;width:min(320px,85vw);transition:left 0.35s ease;box-shadow:4px 0 40px rgba(0,0,0,0.8);}.sidebar.open{left:0;}.mobile-filter-btn{display:flex;}.shop-main{padding:20px;}nav{padding:0 20px;}.nav-links{display:none;}}
+@media(max-width:600px){.products-grid{grid-template-columns:1fr;}.shop-hero{padding:40px 20px 30px;}}
+
+  /* ═══ ACCESSIBILITY & PERFORMANCE ═══ */
+  *:focus-visible{outline:2px solid #C9A84C;outline-offset:3px;border-radius:2px;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}}
+  img{max-width:100%;height:auto;display:block;}
+  button,a,[role=button]{min-height:44px;min-width:44px;}
+  @media(max-width:480px){
+    nav ul{display:none!important;}
+    body{font-size:15px;}
+  }
+  html{text-size-adjust:100%;-webkit-text-size-adjust:100%;}
+</style>
+</head>
+<body>
+<a href="#main-content" class="sr-only" style="position:absolute;top:0;left:0;z-index:9999;padding:8px 16px;background:#C9A84C;color:#0A0A0A;font-weight:700;border-radius:0 0 8px 0;">Skip to content</a>
+
+<nav aria-label="Main navigation">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-badge">CM</div>
+    <span class="nav-wordmark">COSMAN</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html" class="active">Shop</a></li>
+    <li><a href="#">Women</a></li>
+    <li><a href="#">Men</a></li>
+    <li><a href="#">Bags</a></li>
+    <li><a href="#">Sale</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-btn">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
+    <button class="cart-pill">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Cart <span class="cart-count">2</span>
+    </button>
+  </div>
+</nav>
+
+<div class="shop-hero">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">All Collections</span>
+  </div>
+  <h1>Our <em>Collections</em></h1>
+  <p class="shop-hero-sub">Discover 500+ premium styles — curated for the discerning individual.</p>
+  <div class="search-wrap">
+    <input type="text" class="search-input" id="searchInput" placeholder="Search styles, materials, categories…"/>
+    <span class="search-icon">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </span>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div class="shop-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="filter-section">
+      <div class="filter-title">Categories <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div class="cat-list">
+        <div class="cat-item active" data-cat="all" onclick="setCategory(this,'all')">All Products <span class="cat-badge">500</span></div>
+        <div class="cat-item" data-cat="women" onclick="setCategory(this,'women')">Women's Shoes <span class="cat-badge">240</span></div>
+        <div class="cat-item" data-cat="men" onclick="setCategory(this,'men')">Men's Shoes <span class="cat-badge">180</span></div>
+        <div class="cat-item" data-cat="bags" onclick="setCategory(this,'bags')">Bags &amp; Accessories <span class="cat-badge">95</span></div>
+        <div class="cat-item" data-cat="sandals" onclick="setCategory(this,'sandals')">Sandals <span class="cat-badge">60</span></div>
+        <div class="cat-item" data-cat="loafers" onclick="setCategory(this,'loafers')">Loafers <span class="cat-badge">45</span></div>
+        <div class="cat-item" data-cat="sneakers" onclick="setCategory(this,'sneakers')">Sneakers <span class="cat-badge">30</span></div>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-title">Price Range (MAD) <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div class="price-inputs">
+        <input type="number" class="price-input" placeholder="Min" value="0"/>
+        <span class="price-sep">—</span>
+        <input type="number" class="price-input" placeholder="Max" value="5000"/>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-title">Color <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div class="color-swatches">
+        <div class="swatch swatch-black active" title="Black" onclick="this.classList.toggle('active')"></div>
+        <div class="swatch swatch-white" title="White" onclick="this.classList.toggle('active')"></div>
+        <div class="swatch swatch-brown" title="Brown" onclick="this.classList.toggle('active')"></div>
+        <div class="swatch swatch-camel" title="Camel" onclick="this.classList.toggle('active')"></div>
+        <div class="swatch swatch-navy" title="Navy" onclick="this.classList.toggle('active')"></div>
+        <div class="swatch swatch-burgundy" title="Burgundy" onclick="this.classList.toggle('active')"></div>
+        <div class="swatch swatch-gold" title="Gold" onclick="this.classList.toggle('active')"></div>
+        <div class="swatch swatch-nude" title="Nude" onclick="this.classList.toggle('active')"></div>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-title">Size (EU) <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div class="size-grid">
+        <button class="size-btn" onclick="this.classList.toggle('active')">35</button>
+        <button class="size-btn" onclick="this.classList.toggle('active')">36</button>
+        <button class="size-btn active" onclick="this.classList.toggle('active')">37</button>
+        <button class="size-btn" onclick="this.classList.toggle('active')">38</button>
+        <button class="size-btn" onclick="this.classList.toggle('active')">39</button>
+        <button class="size-btn" onclick="this.classList.toggle('active')">40</button>
+        <button class="size-btn" onclick="this.classList.toggle('active')">41</button>
+        <button class="size-btn" onclick="this.classList.toggle('active')">42</button>
+        <button class="size-btn" onclick="this.classList.toggle('active')">43</button>
+        <button class="size-btn" onclick="this.classList.toggle('active')">44</button>
+        <button class="size-btn" onclick="this.classList.toggle('active')">45</button>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-title">Rating <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div class="rating-list">
+        <div class="rating-row"><div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span></div><span class="rating-label">5 stars (128)</span></div>
+        <div class="rating-row"><div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div><span class="rating-label">4+ stars (304)</span></div>
+        <div class="rating-row"><div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span><span class="star-empty">★</span></div><span class="rating-label">3+ stars (412)</span></div>
+      </div>
+    </div>
+    <button class="clear-btn" onclick="clearFilters()">Clear All Filters</button>
+  </aside>
+
+  <main id="main-content" role="main" class="shop-main">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="mobile-filter-btn" onclick="openSidebar()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="10" y2="18"/></svg>
+          Filters
+        </button>
+        <p class="results-count" id="resultsCount">Showing <strong>12</strong> of <strong>500</strong> styles</p>
+        <div class="active-filters" id="activeFilters">
+          <span class="filter-tag">Women <span class="filter-tag-remove" onclick="this.closest('.filter-tag').remove()">×</span></span>
+          <span class="filter-tag">Size 37 <span class="filter-tag-remove" onclick="this.closest('.filter-tag').remove()">×</span></span>
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <select class="sort-select" id="sortSelect" onchange="sortProducts()">
+          <option value="featured">Featured</option>
+          <option value="newest">Newest First</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
+        <div class="view-btns">
+          <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><rect x="0" y="0" width="6" height="6"/><rect x="10" y="0" width="6" height="6"/><rect x="0" y="10" width="6" height="6"/><rect x="10" y="10" width="6" height="6"/></svg>
+          </button>
+          <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="List">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+      <div class="product-card" data-cat="women" data-price="890" style="animation-delay:0s"><div class="card-img bg-gold"><span class="card-img-icon">👠</span><span class="card-badge badge-new">New</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Women · Heels</div><div class="card-name">Classique Stiletto</div><div class="card-material">Full-Grain Leather · Gold Hardware</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div><span class="r-count">(48)</span></div><div class="card-sizes"><span class="sz">36</span><span class="sz">37</span><span class="sz">38</span><span class="sz">39</span></div><div class="card-footer"><div><span class="card-price">890 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="men" data-price="1200" style="animation-delay:0.07s"><div class="card-img bg-blue"><span class="card-img-icon">👞</span><span class="card-badge badge-hot">Bestseller</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Men · Oxford</div><div class="card-name">Grand Oxford Derby</div><div class="card-material">Calfskin Leather · Brogue Detail</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div><span class="r-count">(92)</span></div><div class="card-sizes"><span class="sz">41</span><span class="sz">42</span><span class="sz">43</span><span class="sz">44</span></div><div class="card-footer"><div><span class="card-price">1,200 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="bags" data-price="1650" style="animation-delay:0.14s"><div class="card-img bg-green"><span class="card-img-icon">👜</span><span class="card-badge badge-new">New</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Women · Bags</div><div class="card-name">Prestige Tote Noir</div><div class="card-material">Pebbled Leather · Chain Strap</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div><span class="r-count">(34)</span></div><div class="card-footer" style="margin-top:30px;"><div><span class="card-price">1,650 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="women" data-price="560" style="animation-delay:0.21s"><div class="card-img bg-red"><span class="card-img-icon">🥿</span><span class="card-badge badge-sale">−30%</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Women · Loafers</div><div class="card-name">Velvet Loafer Gold</div><div class="card-material">Italian Suede · Bit Loafer</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star" style="opacity:0.3">★</span></div><span class="r-count">(67)</span></div><div class="card-sizes"><span class="sz">36</span><span class="sz">37</span><span class="sz">38</span></div><div class="card-footer"><div><span class="card-price">560 MAD</span><span class="card-price-old">800 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="sandals" data-price="450" style="animation-delay:0.28s"><div class="card-img bg-purple"><span class="card-img-icon">👡</span><span class="card-badge badge-ltd">Limited</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Women · Sandals</div><div class="card-name">Riviera Flat Sandal</div><div class="card-material">Nappa Leather · Ankle Strap</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div><span class="r-count">(21)</span></div><div class="card-sizes"><span class="sz">36</span><span class="sz">37</span><span class="sz">38</span><span class="sz">39</span></div><div class="card-footer"><div><span class="card-price">450 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="men" data-price="980" style="animation-delay:0.35s"><div class="card-img bg-teal"><span class="card-img-icon">🥾</span><span class="card-badge badge-new">New</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Men · Chelsea Boot</div><div class="card-name">Noir Chelsea Boot</div><div class="card-material">Premium Suede · Elastic Gusset</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div><span class="r-count">(55)</span></div><div class="card-sizes"><span class="sz">40</span><span class="sz">41</span><span class="sz">42</span><span class="sz">43</span></div><div class="card-footer"><div><span class="card-price">980 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="bags" data-price="2100" style="animation-delay:0.42s"><div class="card-img bg-gold"><span class="card-img-icon">👛</span><span class="card-badge badge-ltd">Limited</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Women · Clutch</div><div class="card-name">Soirée Clutch Or</div><div class="card-material">Satin Leather · Gold Clasp</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div><span class="r-count">(18)</span></div><div class="card-footer" style="margin-top:30px;"><div><span class="card-price">2,100 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="loafers" data-price="720" style="animation-delay:0.49s"><div class="card-img bg-blue"><span class="card-img-icon">🥿</span><span class="card-badge badge-hot">Trending</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Men · Loafer</div><div class="card-name">Monaco Slip-On</div><div class="card-material">Smooth Calf · Penny Detail</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star" style="opacity:0.3">★</span></div><span class="r-count">(73)</span></div><div class="card-sizes"><span class="sz">40</span><span class="sz">41</span><span class="sz">42</span><span class="sz">43</span></div><div class="card-footer"><div><span class="card-price">720 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="women" data-price="640" style="animation-delay:0.56s"><div class="card-img bg-red"><span class="card-img-icon">👠</span><span class="card-badge badge-sale">−20%</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Women · Pump</div><div class="card-name">Élégance Block Heel</div><div class="card-material">Patent Leather · 6cm Heel</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div><span class="r-count">(39)</span></div><div class="card-sizes"><span class="sz">36</span><span class="sz">37</span><span class="sz">38</span><span class="sz">39</span><span class="sz">40</span></div><div class="card-footer"><div><span class="card-price">640 MAD</span><span class="card-price-old">800 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="sneakers" data-price="1100" style="animation-delay:0.63s"><div class="card-img bg-green"><span class="card-img-icon">👟</span><span class="card-badge badge-new">New</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Unisex · Sneaker</div><div class="card-name">Maison Blanc Trainer</div><div class="card-material">Premium Leather · Ivory Sole</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div><span class="r-count">(112)</span></div><div class="card-sizes"><span class="sz">37</span><span class="sz">38</span><span class="sz">39</span><span class="sz">40</span><span class="sz">41</span><span class="sz">42</span></div><div class="card-footer"><div><span class="card-price">1,100 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="bags" data-price="1350" style="animation-delay:0.70s"><div class="card-img bg-purple"><span class="card-img-icon">👝</span><span class="card-badge badge-hot">Bestseller</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Women · Shoulder Bag</div><div class="card-name">Capri Shoulder Bag</div><div class="card-material">Quilted Leather · Gold Chain</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star" style="opacity:0.3">★</span></div><span class="r-count">(84)</span></div><div class="card-footer" style="margin-top:30px;"><div><span class="card-price">1,350 MAD</span></div><button class="add-btn">+</button></div></div></div>
+
+      <div class="product-card" data-cat="sandals" data-price="380" style="animation-delay:0.77s"><div class="card-img bg-teal"><span class="card-img-icon">🩴</span><span class="card-badge badge-sale">−15%</span><div class="card-actions"><button class="action-btn">♡</button><button class="action-btn">⤢</button></div></div><div class="card-body"><div class="card-cat">Women · Flat Sandal</div><div class="card-name">Saint-Tropez Slide</div><div class="card-material">Woven Leather · Cushioned Sole</div><div class="card-rating"><div class="r-stars"><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span><span class="r-star">★</span></div><span class="r-count">(29)</span></div><div class="card-sizes"><span class="sz">36</span><span class="sz">37</span><span class="sz">38</span><span class="sz">39</span></div><div class="card-footer"><div><span class="card-price">380 MAD</span><span class="card-price-old">450 MAD</span></div><button class="add-btn">+</button></div></div></div>
+    </div>
+
+    <div class="pagination">
+      <button class="page-btn">‹</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn dots">…</button>
+      <button class="page-btn">18</button>
+      <button class="page-btn">›</button>
+    </div>
+  </main>
+</div>
+
+<script>
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
+function setCategory(el,cat){
+  document.querySelectorAll('.cat-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  let count=0;
+  document.querySelectorAll('.product-card').forEach(card=>{
+    if(cat==='all'||card.dataset.cat===cat){card.style.display='';count++;}
+    else{card.style.display='none';}
+  });
+  document.getElementById('resultsCount').innerHTML='Showing <strong>'+count+'</strong> of <strong>500</strong> styles';
+}
+function clearFilters(){
+  document.querySelectorAll('.cat-item').forEach(i=>i.classList.remove('active'));
+  document.querySelector('[data-cat="all"]').classList.add('active');
+  document.querySelectorAll('.product-card').forEach(c=>c.style.display='');
+  document.getElementById('activeFilters').innerHTML='';
+  document.getElementById('resultsCount').innerHTML='Showing <strong>12</strong> of <strong>500</strong> styles';
+  document.getElementById('searchInput').value='';
+}
+function sortProducts(){
+  const val=document.getElementById('sortSelect').value;
+  const grid=document.getElementById('productsGrid');
+  const cards=Array.from(grid.querySelectorAll('.product-card'));
+  cards.sort((a,b)=>{
+    const pa=parseInt(a.dataset.price)||0,pb=parseInt(b.dataset.price)||0;
+    if(val==='price-asc')return pa-pb;
+    if(val==='price-desc')return pb-pa;
+    return 0;
+  });
+  cards.forEach(c=>grid.appendChild(c));
+}
+function setView(mode){
+  const grid=document.getElementById('productsGrid');
+  if(mode==='list'){grid.classList.add('list-view');document.getElementById('listViewBtn').classList.add('active');document.getElementById('gridViewBtn').classList.remove('active');}
+  else{grid.classList.remove('list-view');document.getElementById('gridViewBtn').classList.add('active');document.getElementById('listViewBtn').classList.remove('active');}
+}
+document.getElementById('searchInput').addEventListener('input',function(){
+  const q=this.value.toLowerCase();let count=0;
+  document.querySelectorAll('.product-card').forEach(card=>{
+    if(!q||card.innerText.toLowerCase().includes(q)){card.style.display='';count++;}
+    else card.style.display='none';
+  });
+  document.getElementById('resultsCount').innerHTML=q?'Showing <strong>'+count+'</strong> results for "<strong>'+this.value+'</strong>"':'Showing <strong>12</strong> of <strong>500</strong> styles';
+});
+document.querySelectorAll('.page-btn:not(.dots)').forEach(btn=>{
+  btn.addEventListener('click',function(){document.querySelectorAll('.page-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active');});
+});
+</script>
+</body>
+</html>
