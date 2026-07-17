@@ -1,226 +1,345 @@
 # COSMAN — Production Deployment Guide
 
-> Premium luxury footwear e-commerce · github.com/orvexuim/cosan
+> **Stack:** Static Frontend (Vercel) + Node.js API (Railway/Render) + PostgreSQL (Supabase/Neon) + Redis (Upstash)
+> **Repo:** https://github.com/orvexuim/cosan
 
 ---
 
-## Architecture Overview
+## Architecture
 
 ```
-  Developer
-     │
-     ▼
- GitHub Repo ──► GitHub Actions CI/CD
-     │                  │
-     │           ┌──────┴──────┐
-     │       Quality       Deploy
-     │       Checks        Jobs
-     │                  │
-     ▼                  ▼
-  main branch ──► Vercel CDN ──► cosman.com (HTTPS)
-                    │
-              Global Edge Network
-              (100+ PoPs worldwide)
+┌─────────────────────────────────────────────────────────┐
+│                    cosman.com                           │
+│                                                         │
+│   GitHub Repo ──► GitHub Actions CI/CD                  │
+│        │                │                               │
+│        │    ┌───────────┴───────────┐                   │
+│        │    │                       │                   │
+│        ▼    ▼                       ▼                   │
+│   Vercel CDN              Docker / Railway               │
+│  (frontend/)             (backend/Node.js API)           │
+│  cosman.com              api.cosman.com:5000             │
+│        │                       │                        │
+│        │               ┌───────┴────────┐               │
+│        │               ▼                ▼               │
+│        │        PostgreSQL (DB)    Redis (Cache)         │
+│        │        Supabase/Neon      Upstash               │
+│        │                                                 │
+│        └─── config.js ──► cosmanFetch() ──► API calls   │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Prerequisites
+## 1. Run Locally
 
+### Prerequisites
 | Tool | Version | Install |
 |------|---------|---------|
-| Git | 2.40+ | pre-installed |
 | Node.js | 20+ | nodejs.org |
-| Vercel CLI | 33+ | `npm i -g vercel` |
 | Docker | 24+ | docker.com |
+| Git | 2.40+ | pre-installed |
 
----
-
-## Environment Variables
-
-Set these as **GitHub Repository Secrets** (Settings → Secrets → Actions):
-
-| Variable | Where | Description |
-|----------|-------|-------------|
-| `VERCEL_TOKEN` | GitHub Secrets | Vercel API token from vercel.com/account/tokens |
-| `VERCEL_ORG_ID` | GitHub Secrets | Found in `.vercel/project.json` after `vercel link` |
-| `VERCEL_PROJECT_ID` | GitHub Secrets | Found in `.vercel/project.json` after `vercel link` |
-| `SITE_URL` | GitHub Secrets | `https://cosman.com` |
-| `GTAG_ID` | GitHub Secrets | Google Analytics measurement ID |
-| `SENTRY_DSN` | GitHub Secrets | Sentry error monitoring DSN |
-
-Copy `.env.example` → `.env` for local use. **Never commit `.env`.**
-
----
-
-## Quick Deploy — Vercel (Recommended)
+### Option A — Docker (recommended, all-in-one)
 
 ```bash
-# 1. Install Vercel CLI
-npm i -g vercel
+# Clone the repo
+git clone https://github.com/orvexuim/cosan.git
+cd cosan
 
-# 2. Login
-vercel login
+# Copy env files
+cp backend/.env.example backend/.env
+# Edit backend/.env with your secrets (see Section 2)
 
-# 3. Link project (run once from repo root)
-vercel link
-
-# 4. Deploy preview
-vercel
-
-# 5. Deploy to production
-vercel --prod
-
-# 6. Add custom domain
-vercel domains add cosman.com
-vercel domains add www.cosman.com
-```
-
----
-
-## CI/CD Pipeline (GitHub Actions)
-
-The workflow in `.github/workflows/deploy.yml` runs automatically:
-
-```
-Push to main branch
-       │
-       ▼
- ┌─────────────┐
- │ quality-    │  ← Validates HTML, JSON, checks files
- │ check job   │
- └──────┬──────┘
-        │ passes
-        ▼
- ┌─────────────┐
- │  deploy-    │  ← vercel --prod
- │ production  │
- └─────────────┘
-
-Pull Request → main
-       │
-       ▼
- ┌─────────────┐
- │  deploy-    │  ← vercel (preview URL)
- │   preview   │
- └─────────────┘
-```
-
-**Setup steps:**
-1. Go to **github.com/orvexuim/cosan → Settings → Secrets → Actions**
-2. Add `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
-3. Any push to `main` will auto-deploy to production
-
----
-
-## Docker Deployment (Self-hosted)
-
-```bash
-# Build image
-docker build -t cosman:latest .
-
-# Run locally (port 8080)
-docker run -p 8080:80 cosman:latest
-
-# With docker-compose (includes auto-updates)
+# Start all services (db + redis + backend)
 docker-compose up -d
 
-# Push to GitHub Container Registry
-docker tag cosman:latest ghcr.io/orvexuim/cosan:latest
-docker push ghcr.io/orvexuim/cosan:latest
+# Run DB migrations
+docker-compose exec backend npx prisma migrate deploy
+docker-compose exec backend npx prisma db seed   # optional sample data
+
+# Open frontend in browser
+open http://localhost        # nginx serves frontend/
+# Backend API available at:
+open http://localhost:5000/api/health
 ```
 
-Or use the deploy script:
+### Option B — Manual (two terminals)
+
 ```bash
-chmod +x scripts/deploy.sh
-./scripts/deploy.sh docker    # Docker only
-./scripts/deploy.sh vercel    # Vercel only
-./scripts/deploy.sh all       # Both
+# Terminal 1: Backend
+cd cosan/backend
+cp .env.example .env         # fill in your secrets
+npm install
+npx prisma migrate dev       # apply migrations
+npm run dev                  # starts on :5000
+
+# Terminal 2: Frontend (any static server)
+cd cosan/frontend
+npx serve .                  # starts on :3000
+# or: python3 -m http.server 3000
 ```
 
 ---
 
-## Custom Domain — DNS Records
+## 2. Environment Variables
 
-Add these records in your DNS provider (Namecheap / GoDaddy / Cloudflare):
+### Backend (`backend/.env`)
+
+| Variable | Required | Example | Notes |
+|----------|----------|---------|-------|
+| `DATABASE_URL` | ✅ | `postgresql://user:pass@host/cosman` | Supabase/Neon/local |
+| `REDIS_URL` | ✅ | `redis://localhost:6379` | Upstash: `rediss://...` |
+| `JWT_SECRET` | ✅ | 64-char random string | `openssl rand -hex 64` |
+| `JWT_REFRESH_SECRET` | ✅ | Different 64-char string | `openssl rand -hex 64` |
+| `CLOUDINARY_CLOUD_NAME` | ✅ | `your_cloud` | Product image uploads |
+| `CLOUDINARY_API_KEY` | ✅ | `123456789` | |
+| `CLOUDINARY_API_SECRET` | ✅ | `abc...` | |
+| `SMTP_HOST` | ✅ | `smtp.gmail.com` | Order confirmation emails |
+| `SMTP_USER` | ✅ | `noreply@cosman.com` | |
+| `SMTP_PASS` | ✅ | Gmail App Password | |
+| `STRIPE_SECRET_KEY` | ✅ | `sk_live_...` | Card payments |
+| `PAYPAL_CLIENT_ID` | ✅ | `...` | PayPal payments |
+| `PAYPAL_CLIENT_SECRET` | ✅ | `...` | |
+| `FRONTEND_URL` | ✅ | `https://cosman.com` | CORS allowlist |
+| `NODE_ENV` | ✅ | `production` | |
+| `PORT` | — | `5000` | Default: 5000 |
+
+### GitHub Secrets (for CI/CD)
+
+Go to **Settings → Secrets and variables → Actions → New repository secret**:
+
+| Secret | Value |
+|--------|-------|
+| `VERCEL_TOKEN` | From vercel.com/account/tokens |
+| `VERCEL_ORG_ID` | From `.vercel/project.json` after `vercel link` |
+| `VERCEL_PROJECT_ID` | From `.vercel/project.json` after `vercel link` |
+
+---
+
+## 3. Production Deployment
+
+### Frontend → Vercel
+
+```bash
+# One-time setup
+npm i -g vercel
+cd cosan
+vercel login
+vercel link                    # creates .vercel/project.json
+vercel env add COSMAN_API_URL  # set to https://api.cosman.com
+
+# Deploy
+vercel --prod
+
+# Or use the deploy script:
+chmod +x scripts/deploy.sh
+VERCEL_TOKEN=xxx ./scripts/deploy.sh vercel
+```
+
+### Backend → Railway
+
+```bash
+# Install Railway CLI
+npm i -g @railway/cli
+railway login
+railway init                   # link to new project
+
+# Set environment variables
+railway variables set DATABASE_URL="postgresql://..."
+railway variables set JWT_SECRET="$(openssl rand -hex 64)"
+# ... (set all vars from Section 2)
+
+# Deploy
+railway up --service backend
+# Railway auto-detects package.json and deploys Node.js
+```
+
+### Backend → Render (alternative)
+
+1. Go to render.com → **New Web Service**
+2. Connect `github.com/orvexuim/cosan`
+3. Set **Root Directory** to `backend`
+4. Build command: `npm install && npx prisma generate`
+5. Start command: `npx prisma migrate deploy && node src/app.js`
+6. Add all env variables from Section 2
+
+### Database → Supabase
+
+```bash
+# 1. Create project at supabase.com
+# 2. Get connection string from Settings → Database → Connection string
+# 3. Set as DATABASE_URL in backend/.env and Railway/Render
+# 4. Run migrations:
+DATABASE_URL="postgresql://postgres:[pass]@db.[project].supabase.co:5432/postgres" \
+  npx prisma migrate deploy
+```
+
+### Database → Neon (alternative)
+
+```bash
+# 1. Create project at neon.tech
+# 2. Copy connection string (includes ?sslmode=require)
+# 3. Set as DATABASE_URL — Neon handles scaling automatically
+```
+
+---
+
+## 4. Domain Configuration
+
+### DNS Records (add at your registrar)
 
 | Type | Name | Value | TTL |
 |------|------|-------|-----|
 | A | `@` | `76.76.21.21` | 3600 |
 | A | `@` | `76.76.21.22` | 3600 |
 | CNAME | `www` | `cname.vercel-dns.com` | 3600 |
+| CNAME | `api` | `your-app.railway.app` | 3600 |
 
-> Vercel provisions HTTPS automatically once DNS propagates (5 min – 48 hrs).
+### Add domain in Vercel
 
----
+```bash
+vercel domains add cosman.com
+vercel domains add www.cosman.com
+```
 
-## SSL Configuration
+Vercel provisions HTTPS/SSL **automatically** once DNS propagates (5 min – 48 h).
 
-**Vercel (automatic):** SSL is provisioned automatically — no action needed.
+### SSL for Self-hosted (Docker)
 
-**Self-hosted (nginx + certbot):**
 ```bash
 chmod +x scripts/setup-ssl.sh
 sudo ./scripts/setup-ssl.sh
+# Obtains Let's Encrypt cert for cosman.com + www.cosman.com
+# Sets up auto-renewal cron job
 ```
-This will:
-- Install certbot
-- Obtain Let's Encrypt cert for `cosman.com` + `www.cosman.com`
-- Configure auto-renewal via cron
-- Reload nginx
 
 ---
 
-## Performance Checklist
+## 5. Database Migrations
 
-- [x] gzip compression (nginx.conf)
-- [x] Security headers (X-Frame-Options, CSP, HSTS)
-- [x] Cache-Control: 1 year for assets, 1 hour for HTML
-- [x] CDN via Vercel Edge Network
-- [x] PWA — Web App Manifest + Service Worker
-- [x] Font preconnect / dns-prefetch
-- [x] Structured data (JSON-LD)
-- [ ] Image optimization — add WebP versions when real product photos are added
-- [ ] Minification — run `html-minifier-terser` in CI for smaller bundles
+```bash
+# Development: create + apply migration
+cd backend
+npx prisma migrate dev --name "migration_name"
+
+# Production: apply pending migrations only (no schema generation)
+npx prisma migrate deploy
+
+# Reset (DANGER — deletes all data)
+npx prisma migrate reset
+
+# Open Prisma Studio (GUI)
+npx prisma studio
+```
+
+Migrations run automatically in CI/CD via:
+`npx prisma migrate deploy` before the backend starts.
 
 ---
 
-## Monitoring
+## 6. CI/CD Pipeline
+
+Every push to `main` triggers:
+
+```
+push → main
+  │
+  ▼
+quality-check (always)
+  • Validate HTML pages
+  • Validate JSON configs
+  • Prisma schema check
+  • Unit tests
+  │
+  ├─ PR? → deploy-preview → Vercel preview URL → PR comment
+  │
+  └─ main? → build-docker + deploy-production
+               • ghcr.io image push
+               • vercel --prod
+               • environment=production
+```
+
+---
+
+## 7. Rollback
+
+```bash
+# Frontend (Vercel)
+vercel rollback                      # interactive — pick previous deployment
+vercel rollback <deployment-url>     # specific deployment
+
+# Backend (Railway)
+railway rollback                     # reverts to previous deploy
+
+# Database
+# Always back up before migrations:
+pg_dump $DATABASE_URL > backup_$(date +%Y%m%d).sql
+# Restore:
+psql $DATABASE_URL < backup_20260717.sql
+
+# Docker
+docker pull ghcr.io/orvexuim/cosan:git-<previous-sha>
+docker-compose down && docker-compose up -d
+```
+
+---
+
+## 8. Monitoring & Logging
 
 | Tool | Purpose | Setup |
 |------|---------|-------|
-| Vercel Analytics | Page views, Web Vitals | Enable in Vercel dashboard |
-| Google Analytics | Traffic, conversions | Add `GTAG_ID` to env |
-| Sentry | JS error tracking | Add `SENTRY_DSN` to env |
-| UptimeRobot | Uptime / alerting | Free tier at uptimerobot.com — monitor https://cosman.com |
+| **Vercel Analytics** | Frontend Web Vitals, traffic | Enable in Vercel dashboard |
+| **Railway Metrics** | Backend CPU/RAM/req/s | Built-in Railway dashboard |
+| **Sentry** | JS error tracking (FE + BE) | Add `SENTRY_DSN` to env |
+| **UptimeRobot** | Uptime alerting (free) | Monitor `https://cosman.com` + `https://api.cosman.com/api/health` |
+| **Logtail** | Structured log aggregation | Set `LOGTAIL_TOKEN` in backend env |
 
----
-
-## Rollback
-
+Logs from Docker:
 ```bash
-# List recent deployments
-vercel ls
-
-# Roll back to previous deployment
-vercel rollback
-
-# Roll back to specific deployment
-vercel rollback <deployment-url>
+docker-compose logs -f backend     # stream backend logs
+docker-compose logs --tail=100 db  # last 100 DB log lines
 ```
 
 ---
 
-## Troubleshooting
+## 9. Troubleshooting
 
-| Issue | Cause | Fix |
-|-------|-------|-----|
-| 404 on page refresh | SPA routing | `vercel.json` rewrites handle this — check the file |
-| Fonts not loading | CSP too strict | Allow `fonts.googleapis.com` in CSP header |
-| Service worker stale | Cache not updated | Increment `CACHE` version in `sw.js` |
-| DNS not resolving | Propagation delay | Wait up to 48h; check with `dig cosman.com` |
-| Docker build fails | Missing files | Run `ls *.html` — all pages must be present |
+| Problem | Likely Cause | Fix |
+|---------|-------------|-----|
+| 404 on page refresh | SPA routing | `vercel.json` rewrites handle this — verify outputDirectory is `frontend` |
+| API calls failing | CORS | Set `FRONTEND_URL=https://cosman.com` in backend env |
+| Fonts not loading | CSP violation | Check Content-Security-Policy header allows `fonts.googleapis.com` |
+| `prisma migrate` fails | DB unreachable | Check `DATABASE_URL` and DB firewall rules |
+| Service worker stale | Cached old version | Bump `CACHE = 'cosman-v2'` in `frontend/sw.js` |
+| Docker DB not ready | Race condition | `docker-compose up` waits for healthcheck — allow 30s |
+| Railway deploy fails | Missing env vars | Check all required vars are set via `railway variables` |
 
 ---
 
-*COSMAN · Built with ♥ in Morocco*
+## 10. Quick Reference
+
+```bash
+# Local dev (all services)
+docker-compose up -d
+
+# Deploy frontend
+vercel --prod
+
+# Deploy backend
+railway up
+
+# Run migrations
+npx prisma migrate deploy
+
+# Rollback frontend
+vercel rollback
+
+# View logs
+docker-compose logs -f backend
+```
+
+---
+
+*COSMAN · Premium Luxury Footwear · Morocco*
+*Built with ♥ by Vesper AI — github.com/orvexuim/cosan*
