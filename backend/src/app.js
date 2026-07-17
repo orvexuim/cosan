@@ -16,6 +16,7 @@ import { swaggerSpec, generateSwaggerJson } from './utils/swagger.js';
 import router from './routes/index.js';
 import { notFound } from './middlewares/notFound.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { startCronJobs } from './jobs/cronJobs.js';
 
 const app = express();
 
@@ -93,6 +94,7 @@ connectDb().then(() => {
 const server = app.listen(config.app.port, () => {
   logger.info(`✨ Server running in ${config.app.env} mode on port ${config.app.port}`);
   logger.info(`📖 API Docs available at ${config.app.url}/api/docs`);
+  startCronJobs();
 });
 
 // Graceful Shutdown

@@ -210,6 +210,67 @@ export class OrderService {
 
     return updated;
   }
+  async getMyOrders(userId, { page = 1, limit = 10, status } = {}) {
+    const skip = (page - 1) * limit;
+    const where = { userId };
+    if (status) where.status = status;
+    const [items, total] = await prisma.$transaction([
+      prisma.order.findMany({
+        where,
+        include: { items: true },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.order.count({ where }),
+    ]);
+    return { items, total, page, limit };
+  }
+
+  async getOrderById(orderId, userId, userRole = 'CUSTOMER') {
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true, shippingAddress: true, user: { select: { id: true, email: true, firstName: true, lastName: true } } },
+    });
+    if (!order) throw new ApiError(404, 'Order not found');
+    if (userRole !== 'ADMIN' && order.userId !== userId) throw new ApiError(403, 'You are not authorized to view this order');
+    return order;
+  }
+
+  async getAllOrders({ page = 1, limit = 20, status, paymentStatus, dateFrom, dateTo } = {}) {
+    const skip = (page - 1) * limit;
+    const where = {};
+    if (status) where.status = status;
+    if (paymentStatus) where.paymentStatus = paymentStatus;
+    if (dateFrom || dateTo) {
+      where.createdAt = {};
+      if (dateFrom) where.createdAt.gte = new Date(dateFrom);
+      if (dateTo) where.createdAt.lte = new Date(dateTo);
+    }
+    const [items, total] = await prisma.$transaction([
+      prisma.order.findMany({
+        where,
+        include: { items: true, user: { select: { id: true, email: true, firstName: true, lastName: true } } },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.order.count({ where }),
+    ]);
+    return { items, total, page, limit };
+  }
+
+  async updateTracking(orderId, trackingNumber, carrier) {
+    const order = await prisma.order.findUnique({ where: { id: orderId } });
+    if (!order) throw new ApiError(404, 'Order not found');
+    const updated = await prisma.order.update({
+      where: { id: orderId },
+      data: { trackingNumber, carrier, status: 'SHIPPED' },
+      include: { items: true },
+    });
+    return updated;
+  }
+
 }
 
 export default new OrderService();
